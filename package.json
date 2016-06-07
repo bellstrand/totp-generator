@@ -1,0 +1,31 @@
+{
+  "name": "totp-generator",
+  "version": "0.0.0",
+  "description": "Generate TOTP tokens from key",
+  "main": "index.js",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/bellstrand/totp-generator.git"
+  },
+  "keywords": [
+    "totp",
+    "time-based one-time password",
+    "generator",
+    "password",
+    "auth",
+    "authentication",
+    "google authenticator",
+    "oath",
+    "2-factor",
+    "two-factor"
+  ],
+  "author": "Magnus Bellstrand",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/bellstrand/totp-generator/issues"
+  },
+  "homepage": "https://github.com/bellstrand/totp-generator",
+  "dependencies": {
+    "jssha": "^2.1.0"
+  }
+}
