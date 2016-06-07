@@ -5,8 +5,14 @@ node_js:
   - "5"
   - "4"
 
+before_script:
+  - npm install -g codeclimate-test-reporter
+
 script:
-  - npm run test
+  - npm run cover
+
+after_success:
+  - codeclimate-test-reporter < coverage/lcov.info
 
 notifications:
   email: false
