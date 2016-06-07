@@ -7,6 +7,9 @@
     "type": "git",
     "url": "git+https://github.com/bellstrand/totp-generator.git"
   },
+  "scripts": {
+    "test": "JASMINE_CONFIG_PATH=jasmine.json jasmine"
+  },
   "keywords": [
     "totp",
     "time-based one-time password",
@@ -27,5 +30,8 @@
   "homepage": "https://github.com/bellstrand/totp-generator",
   "dependencies": {
     "jssha": "^2.1.0"
+  },
+  "devDependencies": {
+    "jasmine": "^2.4.1"
   }
 }
