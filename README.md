@@ -2,6 +2,7 @@
 
 [![Build Status](https://travis-ci.org/bellstrand/totp-generator.svg?branch=master)](https://travis-ci.org/bellstrand/totp-generator)
 [![Code Climate](https://codeclimate.com/github/bellstrand/totp-generator/badges/gpa.svg)](https://codeclimate.com/github/bellstrand/totp-generator)
+[![Test Coverage](https://codeclimate.com/github/bellstrand/totp-generator/badges/coverage.svg)](https://codeclimate.com/github/bellstrand/totp-generator/coverage)
 [![npm Version](https://img.shields.io/npm/v/totp-generator.svg)](https://www.npmjs.com/package/totp-generator)
 
 totp-generator lets you generate TOTP tokens from a TOTP key
