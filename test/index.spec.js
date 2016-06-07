@@ -1,4 +1,6 @@
-var totp = require('../index');
+'use strict';
+
+let totp = require('../index');
 
 describe('totp generation', () => {
 	it('should generate token with date now = 1971', () => {
