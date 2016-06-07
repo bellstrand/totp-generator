@@ -1,6 +1,5 @@
 # totp-generator
 
-[![Build Status](https://travis-ci.org/bellstrand/totp-generator.svg?branch=master)](https://travis-ci.org/bellstrand/totp-generator)
 [![npm Version](https://img.shields.io/npm/v/totp-generator.svg)](https://www.npmjs.com/package/totp-generator)
 
 totp-generator lets you generate TOTP tokens from a TOTP key
