@@ -14,7 +14,7 @@ module.exports = function getToken(key) {
 	offset = hex2dec(hmac.substring(hmac.length - 1));
 	otp = (hex2dec(hmac.substr(offset * 2, 8)) & hex2dec('7fffffff')) + '';
 	otp = otp.substr(otp.length - 6, 6);
-	return parseInt(otp);
+	return parseInt(otp, 10);
 }
 
 function hex2dec(s) {
