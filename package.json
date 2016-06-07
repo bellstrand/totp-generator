@@ -1,6 +1,6 @@
 {
   "name": "totp-generator",
-  "version": "0.0.2",
+  "version": "0.0.3",
   "description": "Generate TOTP tokens from key",
   "main": "index.js",
   "repository": {
