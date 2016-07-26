@@ -30,10 +30,10 @@
   },
   "homepage": "https://github.com/bellstrand/totp-generator",
   "dependencies": {
-    "jssha": "^2.1.0"
+    "jssha": "^2.2.0"
   },
   "devDependencies": {
-    "istanbul": "^0.4.3",
+    "istanbul": "^0.4.4",
     "jasmine": "^2.4.1"
   }
 }
