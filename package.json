@@ -5,11 +5,10 @@
   "main": "index.js",
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/bellstrand/totp-generator.git"
+    "url": "git@github.com:bellstrand/totp-generator.git"
   },
   "scripts": {
-    "test": "JASMINE_CONFIG_PATH=jasmine.json jasmine",
-    "cover": "JASMINE_CONFIG_PATH=jasmine.json istanbul cover jasmine"
+    "test": "jest"
   },
   "keywords": [
     "totp",
@@ -33,7 +32,6 @@
     "jssha": "^2.3.0"
   },
   "devDependencies": {
-    "istanbul": "^0.4.5",
-    "jasmine": "^2.6.0"
+    "jest": "^24.9.0"
   }
 }
