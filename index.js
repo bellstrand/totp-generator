@@ -1,6 +1,6 @@
 'use strict';
 
-let JsSHA = require('jssha/sha1');
+let JsSHA = require('jssha');
 
 module.exports = function getToken(algo, seconds, size, key ) {
 	let epoch, time, shaObj, hmac, offset, otp;

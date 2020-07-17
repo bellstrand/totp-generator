@@ -5,7 +5,7 @@ totp-generator lets you generate TOTP tokens from a TOTP key
 ## How to use
 
 ```node
-const totp = require('totp-generator')
+const totp = require('@encke/totp-generator')
 
 let token = totp('SHA-256', 30, 6, 'JBSWY3DPEHPK3PXP')
 

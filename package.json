@@ -1,6 +1,6 @@
 {
   "name": "@encke/totp-generator",
-  "version": "0.0.9",
+  "version": "0.0.10",
   "description": "Generate TOTP tokens from key",
   "main": "index.js",
   "repository": {
