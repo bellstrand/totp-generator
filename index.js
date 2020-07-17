@@ -7,6 +7,7 @@ module.exports = function getToken(algo, seconds, size, key ) {
 	key = base32tohex(key);
 	epoch = Math.round(Date.now() / 1000.0);
 	time = leftpad(dec2hex(Math.floor(epoch / seconds)), 16, '0');
+	console.log( time )
 	hmac = crypto.createHmac( algo, key ).update( time ).digest( 'hex' ).toUpperCase()
 	offset = hex2dec(hmac.substring(hmac.length - 1));
 	otp = (hex2dec(hmac.substr(offset * 2, 8)) & hex2dec('7fffffff')) + '';
