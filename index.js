@@ -1,13 +1,13 @@
 'use strict';
 
-let JsSHA = require('jssha');
+let JsSHA = require('jssha/sha1');
 
-module.exports = function getToken(key) {
+module.exports = function getToken(key, seconds, algo) {
 	let epoch, time, shaObj, hmac, offset, otp;
 	key = base32tohex(key);
 	epoch = Math.round(Date.now() / 1000.0);
-	time = leftpad(dec2hex(Math.floor(epoch / 30)), 16, '0');
-	shaObj = new JsSHA('SHA-1', 'HEX');
+	time = leftpad(dec2hex(Math.floor(epoch / seconds)), 16, '0');
+	shaObj = new JsSHA(algo, 'HEX');
 	shaObj.setHMACKey(key, 'HEX');
 	shaObj.update(time);
 	hmac = shaObj.getHMAC('HEX');
