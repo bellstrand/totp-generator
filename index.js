@@ -1,16 +1,13 @@
 'use strict';
 
-let JsSHA = require('jssha');
+const crypto = require( 'crypto' )
 
 module.exports = function getToken(algo, seconds, size, key ) {
 	let epoch, time, shaObj, hmac, offset, otp;
 	key = base32tohex(key);
 	epoch = Math.round(Date.now() / 1000.0);
 	time = leftpad(dec2hex(Math.floor(epoch / seconds)), 16, '0');
-	shaObj = new JsSHA(algo, 'HEX');
-	shaObj.setHMACKey(key, 'HEX');
-	shaObj.update(time);
-	hmac = shaObj.getHMAC('HEX');
+	hmac = crypto.createHmac( 'sha512', key ).update( time ).digest( 'hex' )
 	offset = hex2dec(hmac.substring(hmac.length - 1));
 	otp = (hex2dec(hmac.substr(offset * 2, 8)) & hex2dec('7fffffff')) + '';
 	otp = otp.substr((otp.length - size), size);

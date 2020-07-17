@@ -28,9 +28,7 @@
     "url": "https://github.com/bellstrand/totp-generator/issues"
   },
   "homepage": "https://github.com/bellstrand/totp-generator",
-  "dependencies": {
-    "jssha": "^2.3.0"
-  },
+  "dependencies": {},
   "devDependencies": {
     "jest": "^24.9.0"
   },
