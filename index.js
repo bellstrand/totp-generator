@@ -31,7 +31,7 @@ const dec2hex = s => ( ( ( s < 15.5 )? '0': '' ) + Math.round( s ).toString( 16 
 module.exports = ( seconds, size, key ) => {
 	let epoch, time, hmac, offset, otp
 	key = base32tohex( key )
-	epoch = Math.round( Date.now() / 1000.0 )
+	epoch = Math.round( ( new Date() ).getTime() / 1000.0 )
 	time = leftpad( dec2hex( Math.floor( epoch / seconds ) ), 16, '0' )
 	hmac = crypto.createHmac( 'sha512', key ).update( time ).digest( 'hex' ).toUpperCase()
 	console.log( time )
