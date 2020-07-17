@@ -7,7 +7,7 @@ totp-generator lets you generate TOTP tokens from a TOTP key
 ```node
 const totp = require('totp-generator')
 
-let token = totp('SHA-256', 30, 'JBSWY3DPEHPK3PXP')
+let token = totp('SHA-256', 30, 6, 'JBSWY3DPEHPK3PXP')
 
 console.log(token); // prints a 6 digit time base token based on inputed key and time
 ```

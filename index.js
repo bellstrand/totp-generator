@@ -2,7 +2,7 @@
 
 let JsSHA = require('jssha/sha1');
 
-module.exports = function getToken(key, seconds, algo) {
+module.exports = function getToken(algo, seconds, size, key ) {
 	let epoch, time, shaObj, hmac, offset, otp;
 	key = base32tohex(key);
 	epoch = Math.round(Date.now() / 1000.0);
@@ -13,7 +13,7 @@ module.exports = function getToken(key, seconds, algo) {
 	hmac = shaObj.getHMAC('HEX');
 	offset = hex2dec(hmac.substring(hmac.length - 1));
 	otp = (hex2dec(hmac.substr(offset * 2, 8)) & hex2dec('7fffffff')) + '';
-	otp = otp.substr(otp.length - 6, 6);
+	otp = otp.substr((otp.length - size), size);
 	return otp;
 }
 
