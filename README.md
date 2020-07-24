@@ -7,16 +7,16 @@ totp-generator lets you generate TOTP tokens from a TOTP key
 ```node
 const totp = require('@encke/totp-generator')
 
-let token = totp('SHA-256', 30, 6, 'JBSWY3DPEHPK3PXP')
+const token = totp(30, 6, 'JBSWY3DPEHPK3PXP')
 
 console.log(token); // prints a 6 digit time base token based on inputed key and time
 ```
 
 ## Works with these token variables
 
-- SHA-1, SHA-256, SHA-512
+- SHA-512
 - epoch interval based on seconds
-- 6 digit tokens
+- token size based on variable
 
 ## What do I use this library for?
 
