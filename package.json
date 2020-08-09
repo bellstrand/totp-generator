@@ -1,11 +1,11 @@
 {
-  "name": "@encke/totp-generator",
+  "name": "totp-generator",
   "version": "0.0.10",
   "description": "Generate TOTP tokens from key",
   "main": "index.js",
   "repository": {
     "type": "git",
-    "url": "git@github.com:Encke/totp-generator.git"
+    "url": "git@github.com/bellstrand/totp-generator.git"
   },
   "scripts": {
     "test": "jest"

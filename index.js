@@ -28,14 +28,14 @@ const hex2dec = s => parseInt( s, 16 )
 
 const dec2hex = s => ( ( ( s < 15.5 )? '0': '' ) + Math.round( s ).toString( 16 ) )
 
-module.exports = ( seconds, size, key ) => {
+module.exports = ( options ) => {
 	let epoch, time, hmac, offset, otp
-	key = base32tohex( key )
+	key = base32tohex( options.key )
 	epoch = Math.round( ( new Date() ).getTime() / 1000.0 )
-	time = leftpad( dec2hex( Math.floor( epoch / seconds ) ), 16, '0' )
+	time = leftpad( dec2hex( Math.floor( epoch / options.seconds ) ), 16, '0' )
 	hmac = crypto.createHmac( 'sha512', key ).update( time ).digest( 'hex' ).toUpperCase()
 	offset = hex2dec( hmac.substring( hmac.length - 1 ) )
 	otp = ( hex2dec( hmac.substr( ( offset * 2 ), 8 ) ) & hex2dec( '7fffffff' ) ) + ''
-	otp = otp.substr( ( otp.length - size ), size )
+	otp = otp.substr( ( otp.length - options.size ), options.size )
 	return otp
 }
