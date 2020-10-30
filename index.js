@@ -2,18 +2,22 @@
 
 let JsSHA = require('jssha');
 
-module.exports = function getToken(key) {
+module.exports = function getToken(key, options) {
+	options = options || {};	
 	let epoch, time, shaObj, hmac, offset, otp;
+	options.period = options.period || 30;
+	options.algorithm = options.algorithm || 'SHA-1';
+	options.digits = options.digits || 6;
 	key = base32tohex(key);
 	epoch = Math.round(Date.now() / 1000.0);
-	time = leftpad(dec2hex(Math.floor(epoch / 30)), 16, '0');
-	shaObj = new JsSHA('SHA-1', 'HEX');
+	time = leftpad(dec2hex(Math.floor(epoch / options.period)), 16, '0');
+	shaObj = new JsSHA(options.algorithm, 'HEX');
 	shaObj.setHMACKey(key, 'HEX');
 	shaObj.update(time);
 	hmac = shaObj.getHMAC('HEX');
 	offset = hex2dec(hmac.substring(hmac.length - 1));
 	otp = (hex2dec(hmac.substr(offset * 2, 8)) & hex2dec('7fffffff')) + '';
-	otp = otp.substr(otp.length - 6, 6);
+	otp = otp.substr(otp.length - options.digits, options.digits);
 	return otp;
 }
 
