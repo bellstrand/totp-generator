@@ -12,7 +12,7 @@ totp-generator lets you generate TOTP tokens from a TOTP key
 ```javascript
 var totp = require('totp-generator');
 
-var token = totp('JBSWY3DPEHPK3PXP');
+var token = totp('JBSWY3DPEHPK3PXP', 60); // the second parameter specifies the timespan
 
 console.log(token); // prints a 6 digit time base token based on inputed key and time
 ```
@@ -20,7 +20,6 @@ console.log(token); // prints a 6 digit time base token based on inputed key and
 ## Works with these token requirements
 
 - SHA-1
-- 30 sec epoch interval
 - 6 digit tokens
 
 ## What do I use this library for?
