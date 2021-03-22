@@ -23,6 +23,11 @@ describe('totp generation', () => {
 		expect(totp('CI2FM6EQCI2FM6EQKU======')).toEqual('984195');
 	});
 
+	it('should throw if key contains an invalid character', () => {
+		global.Date.now = () => { return 1465324707000; };
+		expect(() => totp('JBSWY3DPEHPK3!@#')).toThrow("Invalid base32 character in key");
+	});
+
 	it('should generate longer-lasting token with date now = 2016', () => {
 		global.Date.now = () => { return 1465324707000; };
 		expect(totp('JBSWY3DPEHPK3PXP', {period: 60})).toEqual('313995');

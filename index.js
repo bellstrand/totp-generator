@@ -38,6 +38,7 @@ function base32tohex(base32) {
 
 	for(let i = 0; i < base32.length; i++) {
 		let val = base32chars.indexOf(base32.charAt(i).toUpperCase());
+		if (val === -1) throw new Error("Invalid base32 character in key");
 		bits += leftpad(val.toString(2), 5, '0');
 	}
 
