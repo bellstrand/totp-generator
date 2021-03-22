@@ -18,9 +18,9 @@ describe('totp generation', () => {
 		expect(totp('JBSWY3DPEHPK3PXP')).toEqual('089029');
 	});
 
-	it('should generate token with date now = 2016', () => {
+	it('should generate token from a padded base32 key', () => {
 		global.Date.now = () => { return 1465324707000; };
-		expect(totp('JBSWY3DPEHPK3PXP')).toEqual('341128');
+		expect(totp('CI2FM6EQCI2FM6EQKU======')).toEqual('984195');
 	});
 
 	it('should generate longer-lasting token with date now = 2016', () => {
