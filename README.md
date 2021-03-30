@@ -12,6 +12,7 @@ totp-generator lets you generate TOTP tokens from a TOTP key
 ```javascript
 const totp = require("totp-generator");
 
+// Keys provided must be base32 strings, ie. only containing characters matching (A-Z, 2-7, =).
 const token = totp("JBSWY3DPEHPK3PXP");
 
 console.log(token); // prints a 6-digit time-based token based on provided key and current time
