@@ -42,4 +42,8 @@ describe('totp generation', () => {
 		global.Date.now = () => { return 1465324707000; };
 		expect(totp('JBSWY3DPEHPK3PXP', {algorithm: 'SHA-512'})).toEqual('093730');
 	});
+
+	it('should generate token with timestamp from options', () => {
+		expect(totp('JBSWY3DPEHPK3PXP', {timestamp: 1465324707000 })).toEqual('341128');
+	});
 });

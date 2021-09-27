@@ -40,10 +40,14 @@ console.log(token); // prints a token created using a different algorithm
 const token = totp("JBSWY3DPEHPK3PXP", { period: 60 });
 console.log(token); // prints a token using a 60-second epoch interval
 
+const token = totp("JBSWY3DPEHPK3PXP", { timestamp: 1465324707000 });
+console.log(token); // prints a token for given time
+
 const token = totp("JBSWY3DPEHPK3PXP", {
 	digits: 8,
 	algorithm: "SHA-512",
 	period: 60,
+	timestamp: 1465324707000,
 });
 console.log(token); // prints a token using all custom settings combined
 ```
