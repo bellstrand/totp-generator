@@ -2,7 +2,7 @@ name: Coverage
 on:
   push:
     branches:
-      - "main"
+      - "master"
     tags-ignore:
       - "*"
 jobs:
