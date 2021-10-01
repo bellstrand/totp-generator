@@ -1,5 +1,5 @@
 name: Test
-on: [push, pull_request]
+on: pull_request
 
 jobs:
   test:
@@ -7,7 +7,7 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        node: [10, 12, 14, 15]
+        node: [10, 12, 14, 16]
     steps:
       - uses: actions/checkout@v1
       - uses: actions/setup-node@v1
@@ -25,13 +25,6 @@ jobs:
       - uses: actions/checkout@v1
       - uses: actions/setup-node@v1
       - name: Install
-        run: |
-          yarn install
-          yarn global add codeclimate-test-reporter
-          echo "$(yarn global bin)" >> $GITHUB_PATH
+        run: yarn install
       - name: Test
         run: yarn test --coverage
-      - name: Coverage Report
-        env:
-          CODECLIMATE_REPO_TOKEN: ${{ secrets.CODECLIMATE_REPO_TOKEN }}
-        run: codeclimate-test-reporter < coverage/lcov.info
