@@ -1,0 +1,26 @@
+name: Test
+on:
+  push:
+    branches:
+      - "main"
+    tags-ignore:
+      - "*"
+jobs:
+  coverage:
+    name: Coverage Report
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v1
+      - uses: actions/setup-node@v1
+      - name: Install
+        run: |
+          yarn install
+          yarn global add codeclimate-test-reporter
+          echo "$(yarn global bin)" >> $GITHUB_PATH
+      - name: Test
+        run: yarn test --coverage
+      - name: Coverage Report
+        if: github.ref == 'refs/heads/master'
+        env:
+          CODECLIMATE_REPO_TOKEN: ${{ secrets.CODECLIMATE_REPO_TOKEN }}
+        run: codeclimate-test-reporter < coverage/lcov.info
