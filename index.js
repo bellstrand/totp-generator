@@ -1,6 +1,8 @@
 "use strict";
 
 let JsSHA = require("jssha");
+//If the default property exist we are probably in webpack
+if(JsSHA.default) JsSHA = JsSHA.default;
 
 module.exports = function getToken(key, options) {
 	options = options || {};
