@@ -8,7 +8,8 @@
     "url": "git@github.com:bellstrand/totp-generator.git"
   },
   "scripts": {
-    "test": "jest"
+    "test": "jest",
+    "test:prettier": "prettier --check '**/*.js'"
   },
   "keywords": [
     "totp",
@@ -32,6 +33,17 @@
     "jssha": "^3.1.2"
   },
   "devDependencies": {
-    "jest": "^27.0.1"
+    "jest": "^27.0.1",
+    "prettier": "^2.4.1"
+  },
+  "jest": {
+    "coverageThreshold": {
+      "global": {
+        "branches": 100,
+        "functions": 100,
+        "lines": 100,
+        "statements": 100
+      }
+    }
   }
 }
