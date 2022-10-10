@@ -1863,9 +1863,9 @@ json5@^2.2.1:
   integrity sha512-1hqLFMSrGHRHxav9q9gNjJ5EXznIxGVO09xQRrwplcS8qs28pZ8s8hupZAmqDwZUmVZ2Qb2jnyPOWcDH8m8dlA==
 
 jssha@^3.1.2:
-  version "3.2.0"
-  resolved "https://registry.yarnpkg.com/jssha/-/jssha-3.2.0.tgz#88ec50b866dd1411deaddbe6b3e3692e4c710f16"
-  integrity sha512-QuruyBENDWdN4tZwJbQq7/eAK85FqrI4oDbXjy5IBhYD+2pTJyBUWZe8ctWaCkrV0gy6AaelgOZZBMeswEa/6Q==
+  version "3.3.0"
+  resolved "https://registry.yarnpkg.com/jssha/-/jssha-3.3.0.tgz#44b5531bcf55a12f4a388476c647a9a1cca92839"
+  integrity sha512-w9OtT4ALL+fbbwG3gw7erAO0jvS5nfvrukGPMWIAoea359B26ALXGpzy4YJSp9yGnpUvuvOw1nSjSoHDfWSr1w==
 
 kleur@^3.0.3:
   version "3.0.3"
