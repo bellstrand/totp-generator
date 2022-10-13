@@ -14,7 +14,7 @@ module.exports = function getToken(key, options) {
 	options.digits = options.digits || 6
 	options.timestamp = options.timestamp || Date.now()
 	key = base32tohex(key)
-	epoch = Math.round(options.timestamp / 1000.0)
+	epoch = Math.floor(options.timestamp / 1000.0)
 	time = leftpad(dec2hex(Math.floor(epoch / options.period)), 16, "0")
 	shaObj = new JsSHA(options.algorithm, "HEX")
 	shaObj.setHMACKey(key, "HEX")

@@ -13,6 +13,16 @@ describe("totp generation", () => {
 		expect(totp("JBSWY3DPEHPK3PXP")).toEqual("341128")
 	})
 
+	it("should generate correct token at the start of the cycle", () => {
+		global.Date.now = () => 1665644340100
+		expect(totp("JBSWY3DPEHPK3PXP")).toEqual("886842")
+	})
+
+	it("should generate correct token at the end of the cycle", () => {
+		global.Date.now = () => 1665644339900
+		expect(totp("JBSWY3DPEHPK3PXP")).toEqual("134996")
+	})
+
 	it("should generate token with a leading zero", () => {
 		global.Date.now = () => 1365324707000
 		expect(totp("JBSWY3DPEHPK3PXP")).toEqual("089029")
