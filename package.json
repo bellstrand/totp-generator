@@ -1,6 +1,6 @@
 {
   "name": "totp-generator",
-  "version": "1.0.0-beta-1",
+  "version": "1.0.0-beta-0",
   "description": "Generate TOTP tokens from key",
   "license": "MIT",
   "author": "Magnus Bellstrand",
@@ -22,11 +22,16 @@
   ],
   "main": "./lib/cjs/index.js",
   "module": "./lib/esm/index.js",
-  "types": "./lib/index.d.ts",
   "exports": {
     ".": {
-      "import": "./lib/esm/index.js",
-      "require": "./lib/cjs/index.js"
+      "import": {
+        "default": "./lib/esm/index.js",
+        "types": "./lib/esm/index.d.ts"
+      },
+      "require": {
+        "default": "./lib/cjs/index.js",
+        "types": "./lib/cjs/index.d.ts"
+      }
     }
   },
   "repository": {
