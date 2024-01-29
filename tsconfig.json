@@ -15,7 +15,8 @@
 		"traceResolution": false,
 		"types": ["node", "jest"],
 		"outDir": "lib",
+		"declaration": true,
 	},
 	"include": ["src"],
-	"exclude": ["node_modules", "lib", "**/*.spec.ts"],
+	"exclude": ["node_modules", "lib", "src/**/*.spec.ts"],
 }
