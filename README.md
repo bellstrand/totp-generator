@@ -10,12 +10,12 @@ totp-generator lets you generate TOTP tokens from a TOTP key
 ## How to use
 
 ```javascript
-const totp = require("totp-generator");
+import { TOTP } from "totp-generator"
 
 // Keys provided must be base32 strings, ie. only containing characters matching (A-Z, 2-7, =).
-const token = totp("JBSWY3DPEHPK3PXP");
+const { otp, expires } = TOTP.generate("JBSWY3DPEHPK3PXP")
 
-console.log(token); // prints a 6-digit time-based token based on provided key and current time
+console.log(otp) // prints a 6-digit time-based token based on provided key and current time
 ```
 
 ## Default token settings
@@ -29,27 +29,27 @@ console.log(token); // prints a 6-digit time-based token based on provided key a
 Settings can be provided as an optional second parameter:
 
 ```javascript
-const totp = require("totp-generator");
+import { TOTP } from "totp-generator"
 
-const token = totp("JBSWY3DPEHPK3PXP", { digits: 8 });
-console.log(token); // prints an 8-digit token
+const { otp } = TOTP.generate("JBSWY3DPEHPK3PXP", { digits: 8 })
+console.log(token) // prints an 8-digit token
 
-const token = totp("JBSWY3DPEHPK3PXP", { algorithm: "SHA-512" });
-console.log(token); // prints a token created using a different algorithm
+const { otp } = TOTP.generate("JBSWY3DPEHPK3PXP", { algorithm: "SHA-512" })
+console.log(token) // prints a token created using a different algorithm
 
-const token = totp("JBSWY3DPEHPK3PXP", { period: 60 });
-console.log(token); // prints a token using a 60-second epoch interval
+const { otp } = TOTP.generate("JBSWY3DPEHPK3PXP", { period: 60 })
+console.log(token) // prints a token using a 60-second epoch interval
 
-const token = totp("JBSWY3DPEHPK3PXP", { timestamp: 1465324707000 });
-console.log(token); // prints a token for given time
+const { otp } = TOTP.generate("JBSWY3DPEHPK3PXP", { timestamp: 1465324707000 })
+console.log(token) // prints a token for given time
 
-const token = totp("JBSWY3DPEHPK3PXP", {
+const { otp } = TOTP.generate("JBSWY3DPEHPK3PXP", {
 	digits: 8,
 	algorithm: "SHA-512",
 	period: 60,
 	timestamp: 1465324707000,
-});
-console.log(token); // prints a token using all custom settings combined
+})
+console.log(token) // prints a token using all custom settings combined
 ```
 
 ## What do I use this library for?

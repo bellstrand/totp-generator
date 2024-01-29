@@ -1,0 +1,21 @@
+{
+	"compilerOptions": {
+		"rootDir": "src",
+		"baseUrl": "src",
+		"target": "esnext",
+		"moduleResolution": "node",
+		"module": "esnext",
+		"inlineSourceMap": false,
+		"lib": ["esnext"],
+		"esModuleInterop": true,
+		"sourceMap": true,
+		"noFallthroughCasesInSwitch": true,
+		"skipLibCheck": true,
+		"strict": true,
+		"traceResolution": false,
+		"types": ["node", "jest"],
+		"outDir": "lib",
+	},
+	"include": ["src"],
+	"exclude": ["node_modules", "lib", "**/*.spec.ts"],
+}
