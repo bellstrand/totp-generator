@@ -2,14 +2,11 @@
   "name": "totp-generator",
   "version": "0.0.14",
   "description": "Generate TOTP tokens from key",
-  "main": "index.js",
-  "repository": {
-    "type": "git",
-    "url": "git@github.com:bellstrand/totp-generator.git"
-  },
-  "scripts": {
-    "test": "jest",
-    "test:prettier": "prettier --check '**/*.js'"
+  "license": "MIT",
+  "author": "Magnus Bellstrand",
+  "homepage": "https://github.com/bellstrand/totp-generator",
+  "bugs": {
+    "url": "https://github.com/bellstrand/totp-generator/issues"
   },
   "keywords": [
     "totp",
@@ -23,20 +20,51 @@
     "2-factor",
     "two-factor"
   ],
-  "author": "Magnus Bellstrand",
-  "license": "MIT",
-  "bugs": {
-    "url": "https://github.com/bellstrand/totp-generator/issues"
+  "main": "./lib/cjs/index.js",
+  "module": "./lib/esm/index.js",
+  "types": "./lib/index.d.ts",
+  "exports": {
+    ".": {
+      "import": "./lib/esm/index.js",
+      "require": "./lib/cjs/index.js",
+      "types": "./lib/index.d.ts"
+    }
   },
-  "homepage": "https://github.com/bellstrand/totp-generator",
+  "repository": {
+    "type": "git",
+    "url": "git@github.com:bellstrand/totp-generator.git"
+  },
+  "scripts": {
+    "test": "jest",
+    "test:prettier": "prettier --check '**/*.js'",
+    "build": "rm -rf lib/* && yarn build:cjs && yarn build:esm && ./build-after.sh && yarn build:types",
+    "build:cjs": "tsc --p tsconfig-esm.json",
+    "build:esm": "tsc --p tsconfig-cjs.json",
+    "build:types": "tsc --emitDeclarationOnly --declaration --skipLibCheck --excludeFiles 'src/**/*.spec.ts'"
+  },
   "dependencies": {
-    "jssha": "^3.1.2"
+    "jssha": "^3.3.1"
   },
   "devDependencies": {
-    "jest": "^29.4.0",
-    "prettier": "^3.0.0"
+    "@types/jest": "^29.5.11",
+    "jest": "^29.7.0",
+    "prettier": "^3.2.4",
+    "ts-jest": "^29.1.2",
+    "typescript": "^5.3.3"
   },
+  "files": [
+    "package.json",
+    "lib",
+    "LICENSE",
+    "README.md"
+  ],
   "jest": {
+    "preset": "ts-jest",
+    "testEnvironment": "node",
+    "moduleFileExtensions": [
+      "js",
+      "ts"
+    ],
     "coverageThreshold": {
       "global": {
         "branches": 100,

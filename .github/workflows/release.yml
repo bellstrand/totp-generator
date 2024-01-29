@@ -1,0 +1,47 @@
+name: Release
+on: workflow_dispatch
+
+jobs:
+  release:
+    name: Release
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - uses: actions/setup-node@v4
+
+      - name: Install
+        run: yarn install
+
+      - name: Build
+        run: yarn build
+
+      - name: Bump Version
+        env:
+          GIT_SSH_COMMAND: "ssh -o StrictHostKeyChecking=no"
+          GITHUB_SSH_KEY: ${{ secrets.GITHUB_SSH_KEY }}
+        run: |
+          eval "$(ssh-agent -s)"
+          ssh-add - <<< "${GITHUB_SSH_KEY}"
+
+          git config --global user.email "bellstrand@gmail.com"
+          git config --global user.name "Magnus Bellstrand"
+          git config --global pull.ff only
+
+          git remote remove origin
+          git remote add origin "git@github.com:${GITHUB_REPOSITORY}.git"
+          git fetch
+          git checkout master
+          git pull origin master
+
+          npx standard-version
+          git push --follow-tags origin master
+
+      - name: Publish NPM package
+        env:
+          NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
+        run: |
+          npm config set '//registry.npmjs.org/:_authToken' "${NPM_TOKEN}"
+          npm publish --access public
