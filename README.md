@@ -1,7 +1,6 @@
 # totp-generator
 
 [![Test](https://github.com/bellstrand/totp-generator/workflows/Test/badge.svg)](https://github.com/bellstrand/totp-generator/actions?query=workflow%3ATest)
-[![Maintainability](https://api.codeclimate.com/v1/badges/5ea846f544cbf46ffcee/maintainability)](https://codeclimate.com/github/bellstrand/totp-generator/maintainability)
 [![Test Coverage](https://api.codeclimate.com/v1/badges/5ea846f544cbf46ffcee/test_coverage)](https://codeclimate.com/github/bellstrand/totp-generator/test_coverage)
 [![npm Version](https://img.shields.io/npm/v/totp-generator.svg)](https://www.npmjs.com/package/totp-generator)
 

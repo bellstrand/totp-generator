@@ -41,10 +41,9 @@
   "scripts": {
     "test": "jest",
     "test:prettier": "prettier --check '**/*.js'",
-    "build": "rm -rf lib/* && yarn build:cjs && yarn build:esm && ./build-after.sh && yarn build:types",
+    "build": "rm -rf lib/* && yarn build:cjs && yarn build:esm && ./build-after.sh",
     "build:cjs": "tsc --p tsconfig-esm.json",
-    "build:esm": "tsc --p tsconfig-cjs.json",
-    "build:types": "tsc --emitDeclarationOnly --declaration --skipLibCheck --excludeFiles 'src/**/*.spec.ts'"
+    "build:esm": "tsc --p tsconfig-cjs.json"
   },
   "dependencies": {
     "jssha": "^3.3.1"
