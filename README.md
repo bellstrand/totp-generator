@@ -31,16 +31,16 @@ Settings can be provided as an optional second parameter:
 import { TOTP } from "totp-generator"
 
 const { otp } = TOTP.generate("JBSWY3DPEHPK3PXP", { digits: 8 })
-console.log(token) // prints an 8-digit token
+console.log(otp) // prints an 8-digit token
 
 const { otp } = TOTP.generate("JBSWY3DPEHPK3PXP", { algorithm: "SHA-512" })
-console.log(token) // prints a token created using a different algorithm
+console.log(otp) // prints a token created using a different algorithm
 
 const { otp } = TOTP.generate("JBSWY3DPEHPK3PXP", { period: 60 })
-console.log(token) // prints a token using a 60-second epoch interval
+console.log(otp) // prints a token using a 60-second epoch interval
 
 const { otp } = TOTP.generate("JBSWY3DPEHPK3PXP", { timestamp: 1465324707000 })
-console.log(token) // prints a token for given time
+console.log(otp) // prints a token for given time
 
 const { otp } = TOTP.generate("JBSWY3DPEHPK3PXP", {
 	digits: 8,
@@ -48,7 +48,7 @@ const { otp } = TOTP.generate("JBSWY3DPEHPK3PXP", {
 	period: 60,
 	timestamp: 1465324707000,
 })
-console.log(token) // prints a token using all custom settings combined
+console.log(otp) // prints a token using all custom settings combined
 ```
 
 ## What do I use this library for?
