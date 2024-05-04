@@ -1,4 +1,4 @@
-import { TOTP } from "."
+import { TOTP, TOTPAlgorithm } from "."
 
 describe("totp generation", () => {
 	beforeEach(() => jest.useFakeTimers())
@@ -54,6 +54,21 @@ describe("totp generation", () => {
 	test("should generate SHA-512-based token with date now = 2016", () => {
 		jest.setSystemTime(1465324707000)
 		expect(TOTP.generate("JBSWY3DPEHPK3PXP", { algorithm: "SHA-512" }).otp).toEqual("093730")
+	})
+
+	test.each([
+		{ algorithm: "SHA-1", expected: "341128" },
+		{ algorithm: "SHA-224", expected: "991776" },
+		{ algorithm: "SHA-256", expected: "461529" },
+		{ algorithm: "SHA-384", expected: "988682" },
+		{ algorithm: "SHA-512", expected: "093730" },
+		{ algorithm: "SHA3-224", expected: "045085" },
+		{ algorithm: "SHA3-256", expected: "255060" },
+		{ algorithm: "SHA3-384", expected: "088901" },
+		{ algorithm: "SHA3-512", expected: "542105" },
+	] as { algorithm: TOTPAlgorithm; expected: string }[])("should generate token based on %p algorithm", ({ algorithm, expected }) => {
+		jest.setSystemTime(1465324707000)
+		expect(TOTP.generate("JBSWY3DPEHPK3PXP", { algorithm }).otp).toEqual(expected)
 	})
 
 	test("should generate token with timestamp from options", () => {

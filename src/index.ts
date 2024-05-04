@@ -1,5 +1,7 @@
 import JsSHA from "jssha"
 
+export type TOTPAlgorithm = "SHA-1" | "SHA-224" | "SHA-256" | "SHA-384" | "SHA-512" | "SHA3-224" | "SHA3-256" | "SHA3-384" | "SHA3-512"
+
 /**
  * @param {string} [digits=6]
  * @param {string} [algorithm="SHA-1"]
@@ -8,7 +10,7 @@ import JsSHA from "jssha"
  */
 type Options = {
 	digits?: number
-	algorithm?: "SHA-1" | "SHA-224" | "SHA-256" | "SHA-384" | "SHA-512" | "SHA3-224" | "SHA3-256" | "SHA3-384" | "SHA3-512"
+	algorithm?: TOTPAlgorithm
 	period?: number
 	timestamp?: number
 }
