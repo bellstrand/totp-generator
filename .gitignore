@@ -1,3 +1,6 @@
+.upm
+.local
+.cache
 .DS_STORE
 node_modules
 dist
