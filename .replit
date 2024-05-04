@@ -1,3 +1,3 @@
-modules = ["nodejs-20:v8-20230920-bd784b9"]
+modules = ["bun-1.1:v1-20240401-269b323"]
 hidden = [".config", "yarn.lock"]
-run = "npm run test"
+run = "bun run test"
