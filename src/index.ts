@@ -27,7 +27,7 @@ export class TOTP {
 		const _options: Required<Options> = { digits: 6, algorithm: "SHA-1", period: 30, timestamp: Date.now(), ...options }
 		const epoch = Math.floor(_options.timestamp / 1000.0)
 		const time = this.leftpad(this.dec2hex(Math.floor(epoch / _options.period)), 16, "0")
-		
+
 		const shaObj = new JsSHA(_options.algorithm, "HEX")
 
 		shaObj.setHMACKey(this.base32tohex(key), "HEX")
@@ -41,7 +41,6 @@ export class TOTP {
 
 		otp = otp.substring(start, start + _options.digits)
 
-		// Calculate expiry time of the OTP
 		const expires = Math.ceil((_options.timestamp + 1) / (_options.period * 1000)) * _options.period * 1000
 
 		return { otp, expires }
