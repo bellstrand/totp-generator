@@ -13,7 +13,7 @@
 		"skipLibCheck": true,
 		"strict": true,
 		"traceResolution": false,
-		"types": ["node", "jest"],
+		"types": ["bun"],
 		"outDir": "lib",
 		"declaration": true,
 	},
