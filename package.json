@@ -39,7 +39,7 @@
     "url": "git@github.com:bellstrand/totp-generator.git"
   },
   "scripts": {
-    "test": "jest",
+    "test": "jest --silent=false",
     "test:prettier": "prettier --check '**/*.js'",
     "build": "rm -rf lib/* && yarn build:cjs && yarn build:esm && ./build-after.sh",
     "build:cjs": "tsc --p tsconfig-esm.json",

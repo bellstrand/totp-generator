@@ -1,6 +1,4 @@
-import JsSHA from "jssha"
-
-export type TOTPAlgorithm = "SHA-1" | "SHA-224" | "SHA-256" | "SHA-384" | "SHA-512" | "SHA3-224" | "SHA3-256" | "SHA3-384" | "SHA3-512"
+export type TOTPAlgorithm = "SHA-1" | "SHA-256" | "SHA-384" | "SHA-512"
 
 /**
  * Options for TOTP generation.
@@ -16,34 +14,39 @@ type Options = {
 	timestamp?: number
 }
 
+const crypto = globalThis.crypto.subtle
+
 export class TOTP {
 	/**
 	 * Generates a Time-based One-Time Password (TOTP).
+	 * @async
 	 * @param {string} key - The secret key for TOTP.
 	 * @param {Options} options - Optional parameters for TOTP.
-	 * @returns An object containing the OTP and its expiry time.
+	 * @returns {Promise<{otp: string, expires: number}>} A promise that resolves to an object containing the OTP and its expiry time.
 	 */
-	static generate(key: string, options?: Options) {
-		const _options: Required<Options> = { digits: 6, algorithm: "SHA-1", period: 30, timestamp: Date.now(), ...options }
-		const epoch = Math.floor(_options.timestamp / 1000.0)
-		const time = this.leftpad(this.dec2hex(Math.floor(epoch / _options.period)), 16, "0")
+	static async generate(key: string, options?: Options): Promise<{ otp: string; expires: number }> {
+		const _options: Required<Options> = {
+			digits: 6,
+			algorithm: "SHA-1",
+			period: 30,
+			timestamp: Date.now(),
+			...options
+		}
+		const epochSeconds = Math.floor(_options.timestamp / 1000)
+		const timeHex = this.leftpad(this.dec2hex(Math.floor(epochSeconds / _options.period)), 16, "0")
+		const keyBuffer = this.base32ToBuffer(key)
 
-		const shaObj = new JsSHA(_options.algorithm, "HEX")
+		const hmacKey = await crypto.importKey("raw", keyBuffer, { name: "HMAC", hash: { name: _options.algorithm } }, false, ["sign"])
+		const signature = await crypto.sign("HMAC", hmacKey, this.hexToBuffer(timeHex))
+		const signatureHex = this.bufferToHex(new Uint8Array(signature))
 
-		shaObj.setHMACKey(this.base32tohex(key), "HEX")
-		shaObj.update(time)
+		const offset = this.hex2dec(signatureHex.slice(-1)) * 2
+		let otp = (this.hex2dec(signatureHex.slice(offset, offset + 8)) & 0x7fffffff).toString()
+		otp = otp.slice(-_options.digits)
 
-		const hmac = shaObj.getHMAC("HEX")
-		const offset = this.hex2dec(hmac.substring(hmac.length - 1)) * 2
+		const nextPeriod = Math.ceil((_options.timestamp + 1) / (_options.period * 1000)) * _options.period * 1000
 
-		let otp = (this.hex2dec(hmac.slice(offset, offset + 8)) & this.hex2dec("7fffffff")) + ""
-		const start = Math.max(otp.length - _options.digits, 0)
-
-		otp = otp.substring(start, start + _options.digits)
-
-		const expires = Math.ceil((_options.timestamp + 1) / (_options.period * 1000)) * _options.period * 1000
-
-		return { otp, expires }
+		return { otp, expires: nextPeriod }
 	}
 
 	/**
@@ -65,31 +68,6 @@ export class TOTP {
 	}
 
 	/**
-	 * Converts a base32 string to a hexadecimal string.
-	 * @param {string} base32 - The base32 string.
-	 * @returns {string} The hex representation.
-	 */
-	private static base32tohex(base32: string): string {
-		const base32chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZ234567"
-		let bits = ""
-		let hex = ""
-
-		const _base32 = base32.replace(/=+$/, "")
-
-		for (let i = 0; i < _base32.length; i++) {
-			const val = base32chars.indexOf(_base32.charAt(i).toUpperCase())
-			if (val === -1) throw new Error("Invalid base32 character in key")
-			bits += this.leftpad(val.toString(2), 5, "0")
-		}
-
-		for (let i = 0; i + 8 <= bits.length; i += 8) {
-			const chunk = bits.slice(i, i + 8)
-			hex = hex + this.leftpad(parseInt(chunk, 2).toString(16), 2, "0")
-		}
-		return hex
-	}
-
-	/**
 	 * Left-pads a string with a specified character to a specified length.
 	 * @param {string} str - The initial string.
 	 * @param {number} len - The target length.
@@ -101,5 +79,65 @@ export class TOTP {
 			str = Array(len + 1 - str.length).join(pad) + str
 		}
 		return str
+	}
+
+	/**
+	 * Converts a base32 encoded string to an ArrayBuffer.
+	 * @param {string} base32String - The base32 encoded string to convert.
+	 * @returns {ArrayBuffer} The ArrayBuffer representation of the base32 encoded string.
+	 */
+	private static base32ToBuffer(base32String: string): ArrayBuffer {
+		const alphabet = "ABCDEFGHIJKLMNOPQRSTUVWXYZ234567"
+		const lookup = new Uint8Array(256).fill(255)
+		for (let i = 0; i < alphabet.length; i++) {
+			lookup[alphabet.charCodeAt(i)] = i
+		}
+
+		let length = base32String.length
+
+		while (base32String.charCodeAt(length - 1) === 61) length-- // Remove pads
+
+		const bufferSize = (length * 5) / 8 // Estimate buffer size
+		const buffer = new Uint8Array(bufferSize)
+		let value = 0,
+			bits = 0,
+			index = 0
+
+		for (let i = 0; i < length; i++) {
+			const charCode = lookup[base32String.charCodeAt(i)]
+			if (charCode === 255) throw new Error("Invalid base32 character in key")
+			value = (value << 5) | charCode
+			bits += 5
+
+			if (bits >= 8) {
+				buffer[index++] = (value >>> (bits - 8)) & 255
+				bits -= 8
+			}
+		}
+		return buffer.buffer
+	}
+
+	/**
+	 * Converts a hexadecimal string to an ArrayBuffer.
+	 * @param {string} hexString - The hexadecimal string to convert.
+	 * @returns {ArrayBuffer} The ArrayBuffer representation of the hexadecimal string.
+	 */
+	private static hexToBuffer(hexString: string): ArrayBuffer {
+		const pairs = hexString.match(/[\dA-F]{2}/gi)
+
+		if (!pairs) return new ArrayBuffer(0)
+
+		const integers = pairs.map((s) => parseInt(s, 16))
+	
+		return new Uint8Array(integers).buffer
+	}
+
+	/**
+	 * Converts an ArrayBuffer to a hexadecimal string.
+	 * @param {ArrayBuffer} buffer - The ArrayBuffer to convert.
+	 * @returns {string} The hexadecimal string representation of the buffer.
+	 */
+	private static bufferToHex(buffer: ArrayBuffer): string {
+		return [...new Uint8Array(buffer)].map((x) => x.toString(16).padStart(2, "0")).join("")
 	}
 }
