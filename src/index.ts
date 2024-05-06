@@ -37,8 +37,8 @@ export class TOTP {
 		const keyBuffer = this.base32ToBuffer(key)
 
 		const hmacKey = await crypto.importKey("raw", keyBuffer, { name: "HMAC", hash: { name: _options.algorithm } }, false, ["sign"])
-		const signature = await crypto.sign("HMAC", hmacKey, this.hexToBuffer(timeHex))
-		const signatureHex = this.bufferToHex(signature)
+		const signature = await crypto.sign("HMAC", hmacKey, this.hex2buf(timeHex))
+		const signatureHex = this.buf2hex(signature)
 
 		const offset = this.hex2dec(signatureHex.slice(-1)) * 2
 		let otp = (this.hex2dec(signatureHex.slice(offset, offset + 8)) & 0x7fffffff).toString()
@@ -122,7 +122,7 @@ export class TOTP {
 	 * @param {string} hexString - The hexadecimal string to convert.
 	 * @returns {ArrayBuffer} The ArrayBuffer representation of the hexadecimal string.
 	 */
-	private static hexToBuffer(hexString: string): ArrayBuffer {
+	private static hex2buf(hexString: string): ArrayBuffer {
 		const pairs = hexString.match(/[\dA-F]{2}/gi)
 
 		if (!pairs) return new ArrayBuffer(0)
@@ -137,7 +137,7 @@ export class TOTP {
 	 * @param {ArrayBuffer} buffer - The ArrayBuffer to convert.
 	 * @returns {string} The hexadecimal string representation of the buffer.
 	 */
-	private static bufferToHex(buffer: ArrayBuffer): string {
+	private static buf2hex(buffer: ArrayBuffer): string {
 		return [...new Uint8Array(buffer)].map((x) => x.toString(16).padStart(2, "0")).join("")
 	}
 }
