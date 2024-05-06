@@ -45,9 +45,6 @@
     "build:cjs": "tsc --p tsconfig-esm.json",
     "build:esm": "tsc --p tsconfig-cjs.json"
   },
-  "dependencies": {
-    "jssha": "^3.3.1"
-  },
   "devDependencies": {
     "@types/jest": "^29.5.11",
     "jest": "^29.7.0",
