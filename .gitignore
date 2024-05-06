@@ -1,6 +1,9 @@
+.upm
+.local
+.cache
 .DS_STORE
 node_modules
-dist
 npm-debug.log
 coverage
+dist
 lib
