@@ -119,17 +119,17 @@ export class TOTP {
 
 	/**
 	 * Converts a hexadecimal string to an ArrayBuffer.
-	 * @param {string} hexString - The hexadecimal string to convert.
+	 * @param {string} hex - The hexadecimal string to convert.
 	 * @returns {ArrayBuffer} The ArrayBuffer representation of the hexadecimal string.
 	 */
-	private static hex2buf(hexString: string): ArrayBuffer {
-		const pairs = hexString.match(/[\dA-F]{2}/gi)
+	private static hex2buf(hex: string): ArrayBuffer {
+		const buffer = new Uint8Array(hex.length / 2);
 
-		if (!pairs) return new ArrayBuffer(0)
+		for (let i = 0, j = 0; i < hex.length; i += 2, j++) {
+			buffer[j] = parseInt(hex.substring(i, i + 2), 16);
+		}
 
-		const integers = pairs.map((s) => parseInt(s, 16))
-
-		return new Uint8Array(integers).buffer as ArrayBuffer
+		return buffer.buffer as ArrayBuffer;
 	}
 
 	/**
