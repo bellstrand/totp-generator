@@ -30,7 +30,7 @@ export class TOTP {
 			algorithm: "SHA-1",
 			period: 30,
 			timestamp: Date.now(),
-			...options
+			...options,
 		}
 		const epochSeconds = Math.floor(_options.timestamp / 1000)
 		const timeHex = this.leftpad(this.dec2hex(Math.floor(epochSeconds / _options.period)), 16, "0")
@@ -38,7 +38,7 @@ export class TOTP {
 
 		const hmacKey = await crypto.importKey("raw", keyBuffer, { name: "HMAC", hash: { name: _options.algorithm } }, false, ["sign"])
 		const signature = await crypto.sign("HMAC", hmacKey, this.hexToBuffer(timeHex))
-		const signatureHex = this.bufferToHex(new Uint8Array(signature))
+		const signatureHex = this.bufferToHex(signature)
 
 		const offset = this.hex2dec(signatureHex.slice(-1)) * 2
 		let otp = (this.hex2dec(signatureHex.slice(offset, offset + 8)) & 0x7fffffff).toString()
@@ -114,7 +114,7 @@ export class TOTP {
 				bits -= 8
 			}
 		}
-		return buffer.buffer
+		return buffer.buffer as ArrayBuffer
 	}
 
 	/**
@@ -128,8 +128,8 @@ export class TOTP {
 		if (!pairs) return new ArrayBuffer(0)
 
 		const integers = pairs.map((s) => parseInt(s, 16))
-	
-		return new Uint8Array(integers).buffer
+
+		return new Uint8Array(integers).buffer as ArrayBuffer
 	}
 
 	/**
