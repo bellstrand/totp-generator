@@ -126,7 +126,7 @@ export class TOTP {
 		const buffer = new Uint8Array(hex.length / 2);
 
 		for (let i = 0, j = 0; i < hex.length; i += 2, j++) {
-			buffer[j] = parseInt(hex.substring(i, i + 2), 16);
+			buffer[j] = this.hex2dec(hex.substring(i, i + 2));
 		}
 
 		return buffer.buffer as ArrayBuffer;
