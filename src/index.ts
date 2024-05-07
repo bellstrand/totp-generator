@@ -88,7 +88,7 @@ export class TOTP {
 	 */
 	private static base32ToBuffer(base32String: string): ArrayBuffer {
 		const alphabet = "ABCDEFGHIJKLMNOPQRSTUVWXYZ234567"
-		const lookup = new Uint8Array(256).fill(255)
+		const lookup: { [key: number]: number } = {}
 		for (let i = 0; i < alphabet.length; i++) {
 			lookup[alphabet.charCodeAt(i)] = i
 		}
@@ -105,7 +105,7 @@ export class TOTP {
 
 		for (let i = 0; i < length; i++) {
 			const charCode = lookup[base32String.charCodeAt(i)]
-			if (charCode === 255) throw new Error("Invalid base32 character in key")
+			if (charCode === undefined) throw new Error("Invalid base32 character in key")
 			value = (value << 5) | charCode
 			bits += 5
 
