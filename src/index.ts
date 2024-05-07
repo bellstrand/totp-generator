@@ -124,7 +124,7 @@ export class TOTP {
 	 * @type {typeof globalThis.crypto.subtle | typeof import('crypto').webcrypto.subtle}
 	 */
 	private static readonly crypto: typeof globalThis.crypto.subtle | typeof import("crypto").webcrypto.subtle =
-		typeof globalThis.crypto !== "undefined" ? globalThis.crypto.subtle : require("crypto").webcrypto.subtle
+		typeof globalThis.crypto?.subtle !== "undefined" ? globalThis.crypto.subtle : require("crypto").webcrypto.subtle
 
 	/**
 	 * A precalculated mapping from base32 character codes to their corresponding index values for performance optimization.
