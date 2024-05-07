@@ -14,8 +14,6 @@ type Options = {
 	timestamp?: number
 }
 
-const crypto = globalThis.crypto.subtle
-
 export class TOTP {
 	/**
 	 * Generates a Time-based One-Time Password (TOTP).
@@ -36,8 +34,8 @@ export class TOTP {
 		const timeHex = this.leftpad(this.dec2hex(Math.floor(epochSeconds / _options.period)), 16, "0")
 		const keyBuffer = this.base32ToBuffer(key)
 
-		const hmacKey = await crypto.importKey("raw", keyBuffer, { name: "HMAC", hash: { name: _options.algorithm } }, false, ["sign"])
-		const signature = await crypto.sign("HMAC", hmacKey, this.hex2buf(timeHex))
+		const hmacKey = await this.crypto.importKey("raw", keyBuffer, { name: "HMAC", hash: { name: _options.algorithm } }, false, ["sign"])
+		const signature = await this.crypto.sign("HMAC", hmacKey, this.hex2buf(timeHex))
 		const signatureHex = this.buf2hex(signature)
 
 		const offset = this.hex2dec(signatureHex.slice(-1)) * 2
@@ -83,19 +81,12 @@ export class TOTP {
 
 	/**
 	 * Converts a base32 encoded string to an ArrayBuffer.
-	 * @param {string} base32String - The base32 encoded string to convert.
+	 * @param {string} str - The base32 encoded string to convert.
 	 * @returns {ArrayBuffer} The ArrayBuffer representation of the base32 encoded string.
 	 */
-	private static base32ToBuffer(base32String: string): ArrayBuffer {
-		const alphabet = "ABCDEFGHIJKLMNOPQRSTUVWXYZ234567"
-		const lookup: { [key: number]: number } = {}
-		for (let i = 0; i < alphabet.length; i++) {
-			lookup[alphabet.charCodeAt(i)] = i
-		}
-
-		let length = base32String.length
-
-		while (base32String.charCodeAt(length - 1) === 61) length-- // Remove pads
+	private static base32ToBuffer(str: string): ArrayBuffer {
+		let length = str.length
+		while (str.charCodeAt(length - 1) === 61) length-- // Remove pads
 
 		const bufferSize = (length * 5) / 8 // Estimate buffer size
 		const buffer = new Uint8Array(bufferSize)
@@ -104,7 +95,7 @@ export class TOTP {
 			index = 0
 
 		for (let i = 0; i < length; i++) {
-			const charCode = lookup[base32String.charCodeAt(i)]
+			const charCode = this.base32[str.charCodeAt(i)]
 			if (charCode === undefined) throw new Error("Invalid base32 character in key")
 			value = (value << 5) | charCode
 			bits += 5
@@ -140,4 +131,8 @@ export class TOTP {
 	private static buf2hex(buffer: ArrayBuffer): string {
 		return [...new Uint8Array(buffer)].map((x) => x.toString(16).padStart(2, "0")).join("")
 	}
+
+	private static readonly crypto = globalThis.crypto.subtle
+
+	private static readonly base32: { [key: string]: number } = { "50": 26, "51": 27, "52": 28, "53": 29, "54": 30, "55": 31, "65": 0, "66": 1, "67": 2, "68": 3, "69": 4, "70": 5, "71": 6, "72": 7, "73": 8, "74": 9, "75": 10, "76": 11, "77": 12, "78": 13, "79": 14, "80": 15, "81": 16, "82": 17, "83": 18, "84": 19, "85": 20, "86": 21, "87": 22, "88": 23, "89": 24, "90": 25 }
 }
