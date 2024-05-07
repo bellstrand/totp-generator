@@ -132,7 +132,11 @@ export class TOTP {
 		return [...new Uint8Array(buffer)].map((x) => x.toString(16).padStart(2, "0")).join("")
 	}
 
-	private static readonly crypto = globalThis.crypto.subtle
+	private static readonly crypto = typeof globalThis.crypto !== 'undefined' ? globalThis.crypto.subtle : require('crypto').webcrypto.subtle
 
+	/**
+	 * A precalculated mapping from base32 character codes to their corresponding index values for performance optimization.
+	 * This mapping is used in the base32ToBuffer method to convert base32 encoded strings to their binary representation.
+	 */
 	private static readonly base32: { [key: string]: number } = { "50": 26, "51": 27, "52": 28, "53": 29, "54": 30, "55": 31, "65": 0, "66": 1, "67": 2, "68": 3, "69": 4, "70": 5, "71": 6, "72": 7, "73": 8, "74": 9, "75": 10, "76": 11, "77": 12, "78": 13, "79": 14, "80": 15, "81": 16, "82": 17, "83": 18, "84": 19, "85": 20, "86": 21, "87": 22, "88": 23, "89": 24, "90": 25 }
 }
