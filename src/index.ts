@@ -31,7 +31,7 @@ export class TOTP {
 			...options
 		}
 		const epochSeconds = Math.floor(_options.timestamp / 1000)
-		const timeHex = this.leftpad(this.dec2hex(Math.floor(epochSeconds / _options.period)), 16, "0")
+		const timeHex = this.dec2hex(Math.floor(epochSeconds / _options.period)).padStart(16, "0")
 		const keyBuffer = this.base32ToBuffer(key)
 
 		const hmacKey = await this.crypto.importKey("raw", keyBuffer, { name: "HMAC", hash: { name: _options.algorithm } }, false, ["sign"])
@@ -63,20 +63,6 @@ export class TOTP {
 	 */
 	private static dec2hex(dec: number): string {
 		return (dec < 15.5 ? "0" : "") + Math.round(dec).toString(16)
-	}
-
-	/**
-	 * Left-pads a string with a specified character to a specified length.
-	 * @param {string} str - The initial string.
-	 * @param {number} len - The target length.
-	 * @param {string} pad - The padding character.
-	 * @returns {string} The padded string.
-	 */
-	private static leftpad(str: string, len: number, pad: string): string {
-		if (len + 1 >= str.length) {
-			str = Array(len + 1 - str.length).join(pad) + str
-		}
-		return str
 	}
 
 	/**
