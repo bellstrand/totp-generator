@@ -114,13 +114,13 @@ export class TOTP {
 	 * @returns {ArrayBuffer} The ArrayBuffer representation of the hexadecimal string.
 	 */
 	private static hex2buf(hex: string): ArrayBuffer {
-		const buffer = new Uint8Array(hex.length / 2);
+		const buffer = new Uint8Array(hex.length / 2)
 
 		for (let i = 0, j = 0; i < hex.length; i += 2, j++) {
-			buffer[j] = this.hex2dec(hex.substring(i, i + 2));
+			buffer[j] = this.hex2dec(hex.substring(i, i + 2))
 		}
 
-		return buffer.buffer as ArrayBuffer;
+		return buffer.buffer as ArrayBuffer
 	}
 
 	/**
@@ -132,7 +132,13 @@ export class TOTP {
 		return [...new Uint8Array(buffer)].map((x) => x.toString(16).padStart(2, "0")).join("")
 	}
 
-	private static readonly crypto = typeof globalThis.crypto !== 'undefined' ? globalThis.crypto.subtle : require('crypto').webcrypto.subtle
+	/**
+	 * The cryptographic interface used for HMAC operations.
+	 * Chooses the Web Crypto API if available, otherwise falls back to Node's crypto module.
+	 * @type {typeof globalThis.crypto.subtle | typeof import('crypto').webcrypto.subtle}
+	 */
+	private static readonly crypto: typeof globalThis.crypto.subtle | typeof import("crypto").webcrypto.subtle =
+		typeof globalThis.crypto !== "undefined" ? globalThis.crypto.subtle : require("crypto").webcrypto.subtle
 
 	/**
 	 * A precalculated mapping from base32 character codes to their corresponding index values for performance optimization.
