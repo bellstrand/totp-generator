@@ -43,8 +43,8 @@
     "test:coverage": "bun test --coverage",
     "test:prettier": "bun prettier --check '**/*.js'",
     "build": "bun run build:cjs && bun run build:esm && ./build-after.sh",
-    "build:cjs": "bun tsc --p tsconfig-esm.json",
-    "build:esm": "bun tsc --p tsconfig-cjs.json"
+    "build:cjs": "bun tsc --p tsconfig-esm.json && bun terser -c -m -o lib/esm/index.js -- lib/esm/*.js",
+    "build:esm": "bun tsc --p tsconfig-cjs.json && bun terser -c -m -o lib/cjs/index.js -- lib/cjs/*.js"
   },
   "devDependencies": {
     "@types/bun": "^1.1.1",
