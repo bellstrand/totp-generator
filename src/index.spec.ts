@@ -72,4 +72,10 @@ describe("totp generation", () => {
 		expect(TOTP.generate("JBSWY3DPEHPK3PXP", { timestamp: start + 30000 })).resolves.toEqual({ otp: "421127", expires: start + 60000 })
 		expect(TOTP.generate("JBSWY3DPEHPK3PXP", { timestamp: start + 30001 })).resolves.toEqual({ otp: "421127", expires: start + 60000 })
 	})
+
+	test("uses node crypto as a fallback", async () => {
+		Object.defineProperty(globalThis, "crypto", { value: undefined, writable: true })
+
+		expect(TOTP.generate("JBSWY3DPEHPK3PXP", { timestamp: 0 })).resolves.toEqual(expect.objectContaining({ otp: "282760" }))
+	})
 })
