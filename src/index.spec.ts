@@ -94,4 +94,12 @@ describe("totp generation", () => {
 		jest.setSystemTime(start + 30001)
 		await expect(TOTP.generate("JBSWY3DPEHPK3PXP")).resolves.toEqual({ otp: "421127", expires: start + 60000 })
 	})
+
+	test("uses node crypto as a fallback", async () => {
+		jest.setSystemTime(0)
+
+		Object.defineProperty(globalThis, "crypto", { value: undefined, writable: true })
+
+		await expect(TOTP.generate("JBSWY3DPEHPK3PXP")).resolves.toEqual(expect.objectContaining({ otp: "282760" }))
+	})
 })
