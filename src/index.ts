@@ -82,14 +82,12 @@ export class TOTP {
 
 		for (let i = 0; i < length; i++) {
 			const charCode = this.base32[str.charCodeAt(i)]
-			if (charCode === undefined) throw new Error("Invalid base32 character in key")
+			if (charCode === undefined) 
+				throw new Error("Invalid base32 character in key")
 			value = (value << 5) | charCode
 			bits += 5
 
-			if (bits >= 8) {
-				buffer[index++] = (value >>> (bits - 8)) & 255
-				bits -= 8
-			}
+			if (bits >= 8) buffer[index++] = (value >>> (bits -= 8)) & 255
 		}
 		return buffer.buffer as ArrayBuffer
 	}
@@ -102,9 +100,8 @@ export class TOTP {
 	private static hex2buf(hex: string): ArrayBuffer {
 		const buffer = new Uint8Array(hex.length / 2)
 
-		for (let i = 0, j = 0; i < hex.length; i += 2, j++) {
-			buffer[j] = this.hex2dec(hex.substring(i, i + 2))
-		}
+		for (let i = 0, j = 0; i < hex.length; i += 2, j++)
+			buffer[j] = this.hex2dec(hex.slice(i, i + 2))
 
 		return buffer.buffer as ArrayBuffer
 	}
@@ -130,5 +127,5 @@ export class TOTP {
 	 * A precalculated mapping from base32 character codes to their corresponding index values for performance optimization.
 	 * This mapping is used in the base32ToBuffer method to convert base32 encoded strings to their binary representation.
 	 */
-	private static readonly base32: { [key: string]: number } = { "50": 26, "51": 27, "52": 28, "53": 29, "54": 30, "55": 31, "65": 0, "66": 1, "67": 2, "68": 3, "69": 4, "70": 5, "71": 6, "72": 7, "73": 8, "74": 9, "75": 10, "76": 11, "77": 12, "78": 13, "79": 14, "80": 15, "81": 16, "82": 17, "83": 18, "84": 19, "85": 20, "86": 21, "87": 22, "88": 23, "89": 24, "90": 25 }
+	private static readonly base32: { [key: number]: number } = { 50: 26, 51: 27, 52: 28, 53: 29, 54: 30, 55: 31, 65: 0, 66: 1, 67: 2, 68: 3, 69: 4, 70: 5, 71: 6, 72: 7, 73: 8, 74: 9, 75: 10, 76: 11, 77: 12, 78: 13, 79: 14, 80: 15, 81: 16, 82: 17, 83: 18, 84: 19, 85: 20, 86: 21, 87: 22, 88: 23, 89: 24, 90: 25 }
 }
