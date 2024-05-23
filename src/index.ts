@@ -39,8 +39,7 @@ export class TOTP {
 		const signatureHex = this.buf2hex(signature)
 
 		const offset = this.hex2dec(signatureHex.slice(-1)) * 2
-		let otp = (this.hex2dec(signatureHex.slice(offset, offset + 8)) & 0x7fffffff).toString()
-		otp = otp.slice(-_options.digits)
+		const otp = (this.hex2dec(signatureHex.slice(offset, offset + 8)) & 0x7fffffff).toString().slice(-_options.digits)
 
 		const nextPeriod = Math.ceil((_options.timestamp + 1) / (_options.period * 1000)) * _options.period * 1000
 
@@ -87,7 +86,7 @@ export class TOTP {
 			value = (value << 5) | charCode
 			bits += 5
 
-			if (bits >= 8) buffer[index++] = (value >>> (bits -= 8)) & 255
+			if (bits >= 8) buffer[index++] = value >>> (bits -= 8)
 		}
 		return buffer.buffer as ArrayBuffer
 	}
