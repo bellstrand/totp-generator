@@ -12,7 +12,7 @@ totp-generator lets you generate TOTP tokens from a TOTP key
 import { TOTP } from "totp-generator"
 
 // Keys provided must be base32 strings, ie. only containing characters matching (A-Z, 2-7, =).
-const { otp, expires } = TOTP.generate("JBSWY3DPEHPK3PXP")
+const { otp, expires } = await TOTP.generate("JBSWY3DPEHPK3PXP")
 
 console.log(otp) // prints a 6-digit time-based token based on provided key and current time
 ```
@@ -30,19 +30,19 @@ Settings can be provided as an optional second parameter:
 ```javascript
 import { TOTP } from "totp-generator"
 
-const { otp } = TOTP.generate("JBSWY3DPEHPK3PXP", { digits: 8 })
+const { otp } = await TOTP.generate("JBSWY3DPEHPK3PXP", { digits: 8 })
 console.log(otp) // prints an 8-digit token
 
-const { otp } = TOTP.generate("JBSWY3DPEHPK3PXP", { algorithm: "SHA-512" })
+const { otp } = await TOTP.generate("JBSWY3DPEHPK3PXP", { algorithm: "SHA-512" })
 console.log(otp) // prints a token created using a different algorithm
 
-const { otp } = TOTP.generate("JBSWY3DPEHPK3PXP", { period: 60 })
+const { otp } = await TOTP.generate("JBSWY3DPEHPK3PXP", { period: 60 })
 console.log(otp) // prints a token using a 60-second epoch interval
 
-const { otp } = TOTP.generate("JBSWY3DPEHPK3PXP", { timestamp: 1465324707000 })
+const { otp } = await TOTP.generate("JBSWY3DPEHPK3PXP", { timestamp: 1465324707000 })
 console.log(otp) // prints a token for given time
 
-const { otp } = TOTP.generate("JBSWY3DPEHPK3PXP", {
+const { otp } = await TOTP.generate("JBSWY3DPEHPK3PXP", {
 	digits: 8,
 	algorithm: "SHA-512",
 	period: 60,
