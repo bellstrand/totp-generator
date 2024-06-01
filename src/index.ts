@@ -116,9 +116,9 @@ export class TOTP {
 	/**
 	 * The cryptographic interface used for HMAC operations.
 	 * Chooses the Web Crypto API if available, otherwise falls back to Node's crypto module.
-	 * @type {typeof globalThis.crypto.subtle | typeof import('crypto').webcrypto.subtle}
+	 * @type {SubtleCrypto}
 	 */
-	private static readonly crypto: typeof globalThis.crypto.subtle | typeof import("crypto").webcrypto.subtle = (
+	private static readonly crypto: SubtleCrypto = (
 		globalThis.crypto || require("crypto").webcrypto
 	).subtle
 
