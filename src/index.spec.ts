@@ -81,9 +81,6 @@ describe("totp generation", () => {
 })
 
 describe("TOTP generation with ASCII keys", () => {
-  beforeEach(() => jest.useFakeTimers())
-  afterEach(() => jest.resetAllMocks())
-
   test.each([
     { time: 59, expectedOtp: "94287082" },
     { time: 1111111109, expectedOtp: "07081804" },
@@ -92,8 +89,7 @@ describe("TOTP generation with ASCII keys", () => {
     { time: 2000000000, expectedOtp: "69279037" },
     { time: 20000000000, expectedOtp: "65353130" },
   ])("should generate correct OTP for time $time", async ({ time, expectedOtp }) => {
-    jest.setSystemTime(time * 1000) // Convert seconds to milliseconds
-    await expect(TOTP.generate("12345678901234567890", { encoding: "ascii", digits: 8 })).resolves.toEqual(
+    await expect(TOTP.generate("12345678901234567890", { encoding: "ascii", digits: 8, timestamp: time * 1000 })).resolves.toEqual(
       expect.objectContaining({ otp: expectedOtp })
     );
   });
