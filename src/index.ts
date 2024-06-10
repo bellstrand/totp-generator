@@ -1,15 +1,18 @@
 export type TOTPAlgorithm = "SHA-1" | "SHA-256" | "SHA-384" | "SHA-512"
+export type TOTPEncoding = "hex" | "ascii"
 
 /**
  * Options for TOTP generation.
  * @param {number} [digits=6] - The number of digits in the OTP.
  * @param {TOTPAlgorithm} [algorithm="SHA-1"] - Algorithm used for hashing.
+ * @param {TOTPEncoding} [encoding="hex"] - Encoding used for the OTP.
  * @param {number} [period=30] - The time period for OTP validity in seconds.
  * @param {number} [timestamp=Date.now()] - The current timestamp.
  */
 type Options = {
 	digits?: number
 	algorithm?: TOTPAlgorithm
+	encoding?: TOTPEncoding
 	period?: number
 	timestamp?: number
 }
@@ -26,6 +29,7 @@ export class TOTP {
 		const _options: Required<Options> = {
 			digits: 6,
 			algorithm: "SHA-1",
+			encoding: "hex",
 			period: 30,
 			timestamp: Date.now(),
 			...options,
@@ -33,7 +37,9 @@ export class TOTP {
 		const epochSeconds = Math.floor(_options.timestamp / 1000)
 		const timeHex = this.dec2hex(Math.floor(epochSeconds / _options.period)).padStart(16, "0")
 
-		const hmacKey = await this.crypto.importKey("raw", this.base32ToBuffer(key), { name: "HMAC", hash: { name: _options.algorithm } }, false, ["sign"])
+		const keyBuffer = _options.encoding === "hex" ? this.base32ToBuffer(key) : this.asciiToBuffer(key)
+
+		const hmacKey = await this.crypto.importKey("raw", keyBuffer, { name: "HMAC", hash: { name: _options.algorithm } }, false, ["sign"])
 		const signature = await this.crypto.sign("HMAC", hmacKey, this.hex2buf(timeHex))
 
 		const signatureHex = this.buf2hex(signature)
@@ -87,6 +93,19 @@ export class TOTP {
 			bits += 5
 
 			if (bits >= 8) buffer[index++] = value >>> (bits -= 8)
+		}
+		return buffer.buffer as ArrayBuffer
+	}
+
+	/**
+	 * Converts an ASCII string to an ArrayBuffer.
+	 * @param {string} str - The ASCII string to convert.
+	 * @returns {ArrayBuffer} The ArrayBuffer representation of the ASCII string.
+	 */
+	private static asciiToBuffer(str: string): ArrayBuffer {
+		const buffer = new Uint8Array(str.length)
+		for (let i = 0; i < str.length; i++) {
+			buffer[i] = str.charCodeAt(i)
 		}
 		return buffer.buffer as ArrayBuffer
 	}
