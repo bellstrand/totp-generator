@@ -3,6 +3,10 @@ import { TOTP, TOTPAlgorithm } from "."
 
 const start = 1665644340000
 describe("totp generation", () => {
+	test("should generate token with lowercase chars", () => {
+		expect(TOTP.generate("jBSwy3DPehpk3pxp", { timestamp: 0 })).resolves.toEqual(expect.objectContaining({ otp: "282760" }))
+	})
+	
 	test("should generate token with date now = 1971", () => {
 		expect(TOTP.generate("JBSWY3DPEHPK3PXP", { timestamp: 0 })).resolves.toEqual(expect.objectContaining({ otp: "282760" }))
 	})

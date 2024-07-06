@@ -77,6 +77,7 @@ export class TOTP {
 	 * @returns {ArrayBuffer} The ArrayBuffer representation of the base32 encoded string.
 	 */
 	private static base32ToBuffer(str: string): ArrayBuffer {
+		str = str.toUpperCase()
 		let length = str.length
 		while (str.charCodeAt(length - 1) === 61) length-- // Remove pads
 
