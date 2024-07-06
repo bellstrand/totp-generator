@@ -4,6 +4,11 @@ describe("totp generation", () => {
 	beforeEach(() => jest.useFakeTimers())
 	afterEach(() => jest.resetAllMocks())
 
+	test("should generate token with lowercase key characters", async () => {
+		jest.setSystemTime(0)
+		await expect(TOTP.generate("jbswY3dpehpk3pxp")).resolves.toEqual(expect.objectContaining({ otp: "282760" }))
+	})
+
 	test("should generate token with date now = 1971", async () => {
 		jest.setSystemTime(0)
 		await expect(TOTP.generate("JBSWY3DPEHPK3PXP")).resolves.toEqual(expect.objectContaining({ otp: "282760" }))
