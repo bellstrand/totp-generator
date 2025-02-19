@@ -83,16 +83,13 @@ export class TOTP {
 
 		const bufferSize = (length * 5) / 8 // Estimate buffer size
 		const buffer = new Uint8Array(bufferSize)
-		let value = 0,
-			bits = 0,
-			index = 0
+		let value = 0, bits = 0, index = 0
 
 		for (let i = 0; i < length; i++) {
 			const charCode = this.base32[str.charCodeAt(i)]
 			if (charCode === undefined) throw new Error("Invalid base32 character in key")
 			value = (value << 5) | charCode
 			bits += 5
-
 			if (bits >= 8) buffer[index++] = value >>> (bits -= 8)
 		}
 		return buffer.buffer as ArrayBuffer
@@ -118,9 +115,7 @@ export class TOTP {
 	 */
 	private static hex2buf(hex: string): ArrayBuffer {
 		const buffer = new Uint8Array(hex.length / 2)
-
 		for (let i = 0, j = 0; i < hex.length; i += 2, j++) buffer[j] = this.hex2dec(hex.slice(i, i + 2))
-
 		return buffer.buffer as ArrayBuffer
 	}
 
@@ -138,9 +133,8 @@ export class TOTP {
 	 * Chooses the Web Crypto API if available, otherwise falls back to Node's crypto module.
 	 * @type {SubtleCrypto}
 	 */
-	private static readonly crypto: SubtleCrypto = (
-		globalThis.crypto || require("crypto").webcrypto
-	).subtle
+	/* istanbul ignore next */
+	private static readonly crypto: SubtleCrypto = (globalThis.crypto || require("crypto").webcrypto).subtle
 
 	/**
 	 * A precalculated mapping from base32 character codes to their corresponding index values for performance optimization.
