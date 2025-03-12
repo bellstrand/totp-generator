@@ -6,7 +6,7 @@
 		"moduleResolution": "node",
 		"module": "esnext",
 		"inlineSourceMap": false,
-		"lib": ["es2020", "dom"],
+		"lib": ["esnext"],
 		"esModuleInterop": true,
 		"sourceMap": true,
 		"noFallthroughCasesInSwitch": true,
