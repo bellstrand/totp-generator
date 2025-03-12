@@ -1,4 +1,4 @@
 node_modules/
 package.json
-bun.lockb
 coverage/
+bun.lock
