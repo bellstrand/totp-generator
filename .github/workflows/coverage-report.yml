@@ -11,14 +11,13 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
-      - uses: actions/setup-node@v2
+      - uses: oven-sh/setup-bun@v2
       - name: Install
         run: |
-          yarn install
-          yarn global add codeclimate-test-reporter
-          echo "$(yarn global bin)" >> $GITHUB_PATH
+          bun install
+          bunx codeclimate-test-reporter
       - name: Test
-        run: yarn test --coverage
+        run: bun test --coverage
       - name: Coverage Report
         if: github.ref == 'refs/heads/master'
         env:

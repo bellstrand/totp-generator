@@ -10,13 +10,13 @@ jobs:
         with:
           fetch-depth: 0
 
-      - uses: actions/setup-node@v4
+      - uses: oven-sh/setup-bun@v2
 
       - name: Install
-        run: yarn install
+        run: bun i
 
       - name: Build
-        run: yarn build
+        run: bun run build
 
       - name: Bump Version
         env:
@@ -36,7 +36,7 @@ jobs:
           git checkout master
           git pull origin master
 
-          npx standard-version
+          bunx standard-version
           git push --follow-tags origin master
 
       - name: Publish NPM package

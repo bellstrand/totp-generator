@@ -42,7 +42,7 @@
     "test": "bun test",
     "test:coverage": "bun test --coverage",
     "test:prettier": "bun prettier --check '**/*.js'",
-    "build": "bun run build:cjs && bun run build:esm && ./build-after.sh",
+    "build": "bun build:cjs && bun build:esm && ./build-after.sh",
     "build:cjs": "bunx tsc --p tsconfig-cjs.json && bunx terser --source-map -cmo lib/cjs/index.js lib/cjs/index.js",
     "build:esm": "bunx tsc --p tsconfig-esm.json && bunx terser --source-map -cmo lib/esm/index.js lib/esm/index.js"
   },
