@@ -42,6 +42,7 @@
     "test": "jest --silent=false",
     "test:coverage": "jest --silent=false --coverage",
     "test:prettier": "prettier --check '**/*.js'",
+    "prepare": "npm run build",
     "build": "rm -rf lib/* && yarn build:cjs && yarn build:esm && ./build-after.sh",
     "build:cjs": "tsc -p tsconfig-cjs.json && terser --source-map -cmo lib/cjs/index.js lib/cjs/index.js",
     "build:esm": "tsc -p tsconfig-esm.json && terser --source-map -cmo lib/esm/index.js lib/esm/index.js"
