@@ -11,7 +11,7 @@ jobs:
       - name: Install
         run: yarn install
       - name: Biome
-        run: yarn biome
+        run: yarn check
   test:
     name: Test Node.JS
     runs-on: ubuntu-latest
