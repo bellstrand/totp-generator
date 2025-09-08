@@ -1,6 +1,6 @@
 {
   "name": "totp-generator",
-  "version": "1.0.0",
+  "version": "1.1.0",
   "description": "Generate TOTP tokens from key",
   "license": "MIT",
   "author": "Magnus Bellstrand",
