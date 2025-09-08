@@ -8,6 +8,7 @@ export type TOTPEncoding = "hex" | "ascii"
  * @param {TOTPEncoding} [encoding="hex"] - Encoding used for the OTP.
  * @param {number} [period=30] - The time period for OTP validity in seconds.
  * @param {number} [timestamp=Date.now()] - The current timestamp.
+ * @param {boolean} [explicitZeroPad=false] - If true, pads the OTP with leading zeros to match the desired number of digits.
  */
 type Options = {
 	digits?: number
@@ -15,6 +16,7 @@ type Options = {
 	encoding?: TOTPEncoding
 	period?: number
 	timestamp?: number
+	explicitZeroPad?: boolean
 }
 
 export class TOTP {
@@ -32,20 +34,22 @@ export class TOTP {
 			encoding: "hex",
 			period: 30,
 			timestamp: Date.now(),
+			explicitZeroPad: false,
 			...options,
 		}
 		const epochSeconds = Math.floor(_options.timestamp / 1000)
-		const timeHex = this.dec2hex(Math.floor(epochSeconds / _options.period)).padStart(16, "0")
+		const timeHex = TOTP.dec2hex(Math.floor(epochSeconds / _options.period)).padStart(16, "0")
 
-		const keyBuffer = _options.encoding === "hex" ? this.base32ToBuffer(key) : this.asciiToBuffer(key)
+		const keyBuffer = _options.encoding === "hex" ? TOTP.base32ToBuffer(key) : TOTP.asciiToBuffer(key)
 
-		const hmacKey = await this.crypto.importKey("raw", keyBuffer, { name: "HMAC", hash: { name: _options.algorithm } }, false, ["sign"])
-		const signature = await this.crypto.sign("HMAC", hmacKey, this.hex2buf(timeHex))
+		const hmacKey = await TOTP.crypto.importKey("raw", keyBuffer, { name: "HMAC", hash: { name: _options.algorithm } }, false, ["sign"])
+		const signature = await TOTP.crypto.sign("HMAC", hmacKey, TOTP.hex2buf(timeHex))
 
-		const signatureHex = this.buf2hex(signature)
-		const offset = this.hex2dec(signatureHex.slice(-1)) * 2
-		const masked = this.hex2dec(signatureHex.slice(offset, offset + 8)) & 0x7fffffff
-		const otp = masked.toString().slice(-_options.digits)
+		const signatureHex = TOTP.buf2hex(signature)
+		const offset = TOTP.hex2dec(signatureHex.slice(-1)) * 2
+		const masked = TOTP.hex2dec(signatureHex.slice(offset, offset + 8)) & 0x7fffffff
+		const otpString = masked.toString().slice(-_options.digits)
+		const otp = _options.explicitZeroPad ? otpString.padStart(_options.digits, "0") : otpString
 
 		const period = _options.period * 1000
 		const expires = Math.ceil((_options.timestamp + 1) / period) * period
@@ -83,10 +87,12 @@ export class TOTP {
 
 		const bufferSize = (length * 5) / 8 // Estimate buffer size
 		const buffer = new Uint8Array(bufferSize)
-		let value = 0, bits = 0, index = 0
+		let value = 0
+		let bits = 0
+		let index = 0
 
 		for (let i = 0; i < length; i++) {
-			const charCode = this.base32[str.charCodeAt(i)]
+			const charCode = TOTP.base32[str.charCodeAt(i)]
 			if (charCode === undefined) throw new Error("Invalid base32 character in key")
 			value = (value << 5) | charCode
 			bits += 5
@@ -115,7 +121,7 @@ export class TOTP {
 	 */
 	private static hex2buf(hex: string): ArrayBuffer {
 		const buffer = new Uint8Array(hex.length / 2)
-		for (let i = 0, j = 0; i < hex.length; i += 2, j++) buffer[j] = this.hex2dec(hex.slice(i, i + 2))
+		for (let i = 0, j = 0; i < hex.length; i += 2, j++) buffer[j] = TOTP.hex2dec(hex.slice(i, i + 2))
 		return buffer.buffer as ArrayBuffer
 	}
 
@@ -134,7 +140,7 @@ export class TOTP {
 	 * @type {SubtleCrypto}
 	 */
 	/* istanbul ignore next */
-	private static readonly crypto: SubtleCrypto = (globalThis.crypto || require("crypto").webcrypto).subtle
+	private static readonly crypto: SubtleCrypto = (globalThis.crypto || require("node:crypto").webcrypto).subtle
 
 	/**
 	 * A precalculated mapping from base32 character codes to their corresponding index values for performance optimization.

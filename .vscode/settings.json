@@ -1,0 +1,11 @@
+{
+	"editor.formatOnSave": true,
+	"editor.codeActionsOnSave": {
+		"source.organizeImports": "never",
+		"source.organizeImports.biome": "explicit",
+		"source.removeUnusedImports": "always"
+	},
+	"editor.defaultFormatter": "biomejs.biome",
+	"typescript.preferences.importModuleSpecifier": "relative",
+	"typescript.tsdk": "node_modules/typescript/lib"
+}

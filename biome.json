@@ -1,0 +1,54 @@
+{
+	"$schema": "https://biomejs.dev/schemas/2.2.3/schema.json",
+	"assist": { "actions": { "source": { "organizeImports": "on" } } },
+
+	"files": {
+		"includes": ["src/**/*.ts", ".vscode/**", "tsconfig.json", "biome.json"]
+	},
+	"linter": {
+		"enabled": true,
+		"rules": {
+			"recommended": true,
+			"a11y": {
+				"noSvgWithoutTitle": "off",
+				"useKeyWithClickEvents": "off",
+				"useFocusableInteractive": "off",
+				"useSemanticElements": "off",
+				"useAriaPropsForRole": "off"
+			},
+			"correctness": {
+				"noUnusedVariables": "error",
+				"noUnusedImports": "warn",
+				"useExhaustiveDependencies": "off",
+				"useHookAtTopLevel": "off",
+				"useUniqueElementIds": "off",
+				"noNestedComponentDefinitions": "off",
+				"useParseIntRadix": "off"
+			},
+			"complexity": {
+				"noForEach": "off",
+				"noStaticOnlyClass": "off"
+			},
+			"suspicious": {
+				"noConsole": { "level": "warn", "options": { "allow": ["log", "error", "info"] } },
+				"noExplicitAny": "off",
+				"noArrayIndexKey": "off",
+				"noExportsInTest": "off",
+				"noAssignInExpressions": "off"
+			}
+		}
+	},
+	"formatter": {
+		"lineWidth": 160,
+		"indentStyle": "tab",
+		"lineEnding": "lf"
+	},
+	"javascript": {
+		"parser": {
+			"unsafeParameterDecoratorsEnabled": true
+		},
+		"formatter": {
+			"semicolons": "asNeeded"
+		}
+	}
+}

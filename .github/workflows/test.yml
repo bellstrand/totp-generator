@@ -10,8 +10,8 @@ jobs:
       - uses: actions/setup-node@v2
       - name: Install
         run: yarn install
-      - name: Prettier
-        run: yarn test:prettier
+      - name: Biome
+        run: yarn biome
   test:
     name: Test Node.JS
     runs-on: ubuntu-latest

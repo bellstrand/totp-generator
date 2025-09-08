@@ -33,6 +33,9 @@ import { TOTP } from "totp-generator"
 const { otp } = await TOTP.generate("JBSWY3DPEHPK3PXP", { digits: 8 })
 console.log(otp) // prints an 8-digit token
 
+const { otp } = await TOTP.generate("JBSWY3DPEHPK3PXP", { digits: 8, explicitZeroPad: true })
+console.log(otp) // prints an 8-digit token (with explicit zero padding to always be 8 digits long)
+
 const { otp } = await TOTP.generate("JBSWY3DPEHPK3PXP", { algorithm: "SHA-512" })
 console.log(otp) // prints a token created using a different algorithm
 

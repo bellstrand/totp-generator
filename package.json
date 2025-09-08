@@ -41,15 +41,15 @@
   "scripts": {
     "test": "jest --silent=false",
     "test:coverage": "jest --silent=false --coverage",
-    "test:prettier": "prettier --check '**/*.js'",
+    "check": "biome check",
     "build": "rm -rf lib/* && yarn build:cjs && yarn build:esm && ./build-after.sh",
     "build:cjs": "tsc -p tsconfig-cjs.json && terser --source-map -cmo lib/cjs/index.js lib/cjs/index.js",
     "build:esm": "tsc -p tsconfig-esm.json && terser --source-map -cmo lib/esm/index.js lib/esm/index.js"
   },
   "devDependencies": {
+    "@biomejs/biome": "^2.2.3",
     "@types/jest": "^30.0.0",
     "jest": "^30.0.2",
-    "prettier": "^3.2.4",
     "terser": "^5.31.0",
     "ts-jest": "^29.1.2",
     "typescript": "^5.3.3"

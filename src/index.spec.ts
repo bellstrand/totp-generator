@@ -1,4 +1,4 @@
-import { TOTP, TOTPAlgorithm } from "."
+import { TOTP, type TOTPAlgorithm } from "."
 
 describe("totp generation", () => {
 	beforeEach(() => jest.useFakeTimers())
@@ -79,7 +79,13 @@ describe("totp generation", () => {
 		await expect(TOTP.generate("3IS523AYRNFUE===", { digits: 9 })).resolves.toEqual(expect.objectContaining({ otp: "97859470" }))
 	})
 
+	test("should return all values explicit zero padded when values is less then digits", async () => {
+		jest.setSystemTime(1634193300000)
+		await expect(TOTP.generate("3IS523AYRNFUE===", { digits: 9, explicitZeroPad: true })).resolves.toEqual(expect.objectContaining({ otp: "097859470" }))
+	})
+
 	test("should trigger leftpad fix", async () => {
+		// biome-ignore lint/correctness/noPrecisionLoss: not in runtime!
 		jest.setSystemTime(12312354132421332222222222)
 		await expect(TOTP.generate("JBSWY3DPEHPK3PXP")).resolves.toEqual(expect.objectContaining({ otp: "895896" }))
 	})
@@ -110,20 +116,18 @@ describe("totp generation", () => {
 })
 
 describe("TOTP generation with ASCII keys", () => {
-  beforeEach(() => jest.useFakeTimers())
-  afterEach(() => jest.resetAllMocks())
+	beforeEach(() => jest.useFakeTimers())
+	afterEach(() => jest.resetAllMocks())
 
-  test.each([
-    { time: 59, expectedOtp: "94287082" },
-    { time: 1111111109, expectedOtp: "07081804" },
-    { time: 1111111111, expectedOtp: "14050471" },
-    { time: 1234567890, expectedOtp: "89005924" },
-    { time: 2000000000, expectedOtp: "69279037" },
-    { time: 20000000000, expectedOtp: "65353130" },
-  ])("should generate correct OTP for time $time", async ({ time, expectedOtp }) => {
-    jest.setSystemTime(time * 1000) // Convert seconds to milliseconds
-    await expect(TOTP.generate("12345678901234567890", { encoding: "ascii", digits: 8 })).resolves.toEqual(
-      expect.objectContaining({ otp: expectedOtp })
-    );
-  });
-});
+	test.each([
+		{ time: 59, expectedOtp: "94287082" },
+		{ time: 1111111109, expectedOtp: "07081804" },
+		{ time: 1111111111, expectedOtp: "14050471" },
+		{ time: 1234567890, expectedOtp: "89005924" },
+		{ time: 2000000000, expectedOtp: "69279037" },
+		{ time: 20000000000, expectedOtp: "65353130" },
+	])("should generate correct OTP for time $time", async ({ time, expectedOtp }) => {
+		jest.setSystemTime(time * 1000) // Convert seconds to milliseconds
+		await expect(TOTP.generate("12345678901234567890", { encoding: "ascii", digits: 8 })).resolves.toEqual(expect.objectContaining({ otp: expectedOtp }))
+	})
+})
