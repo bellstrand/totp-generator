@@ -1,7 +1,6 @@
 # totp-generator
 
 [![Test](https://github.com/bellstrand/totp-generator/workflows/Test/badge.svg)](https://github.com/bellstrand/totp-generator/actions?query=workflow%3ATest)
-[![Test Coverage](https://api.codeclimate.com/v1/badges/5ea846f544cbf46ffcee/test_coverage)](https://codeclimate.com/github/bellstrand/totp-generator/test_coverage)
 [![npm Version](https://img.shields.io/npm/v/totp-generator.svg)](https://www.npmjs.com/package/totp-generator)
 
 totp-generator lets you generate TOTP tokens from a TOTP key
@@ -58,3 +57,10 @@ console.log(otp) // prints a token using all custom settings combined
 
 - TOTP generation
 - E2E tests (where you need to login with 2-factor authentication)
+
+## 💥 Breaking Changes in v2.0.0
+The generate() method has been refactored to be asynchronous. This was done by replacing the external jssha library with the native Web Crypto API, which is more secure and performant.
+
+| Before (v1.x.x)                   | After (v2.0.0)                          |
+| --------------------------------- | --------------------------------------- |
+| `const token = generate(secret);` | `const token = await generate(secret);` |
