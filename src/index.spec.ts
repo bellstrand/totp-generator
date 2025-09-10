@@ -105,14 +105,6 @@ describe("totp generation", () => {
 		jest.setSystemTime(start + 30001)
 		await expect(TOTP.generate("JBSWY3DPEHPK3PXP")).resolves.toEqual({ otp: "421127", expires: start + 60000 })
 	})
-
-	test("uses node crypto as a fallback", async () => {
-		jest.setSystemTime(0)
-
-		Object.defineProperty(globalThis, "crypto", { value: undefined, writable: true })
-
-		await expect(TOTP.generate("JBSWY3DPEHPK3PXP")).resolves.toEqual(expect.objectContaining({ otp: "282760" }))
-	})
 })
 
 describe("TOTP generation with ASCII keys", () => {
@@ -129,5 +121,41 @@ describe("TOTP generation with ASCII keys", () => {
 	])("should generate correct OTP for time $time", async ({ time, expectedOtp }) => {
 		jest.setSystemTime(time * 1000) // Convert seconds to milliseconds
 		await expect(TOTP.generate("12345678901234567890", { encoding: "ascii", digits: 8 })).resolves.toEqual(expect.objectContaining({ otp: expectedOtp }))
+	})
+})
+
+describe("fallback environments", () => {
+	test("uses node crypto when global crypto is unavailable", async () => {
+		jest.setSystemTime(0)
+		const originalCrypto = globalThis.crypto
+
+		try {
+			Object.defineProperty(globalThis, "crypto", { value: undefined, writable: true, configurable: true })
+			await expect(TOTP.generate("JBSWY3DPEHPK3PXP")).resolves.toEqual(expect.objectContaining({ otp: "282760" }))
+		} finally {
+			Object.defineProperty(globalThis, "crypto", { value: originalCrypto, writable: true, configurable: true })
+		}
+	})
+
+	test("uses JSSHA as fallback when native crypto APIs are unavailable", async () => {
+		jest.doMock("node:crypto", () => ({
+			...jest.requireActual("node:crypto"),
+			webcrypto: undefined,
+		}))
+
+		jest.setSystemTime(0)
+		const originalGlobalCrypto = globalThis.crypto
+
+		try {
+			Object.defineProperty(globalThis, "crypto", { value: undefined, writable: true, configurable: true })
+
+			await jest.isolateModules(async () => {
+				const { TOTP } = await import(".")
+				await expect(TOTP.generate("JBSWY3DPEHPK3PXP")).resolves.toEqual(expect.objectContaining({ otp: "282760" }))
+			})
+		} finally {
+			Object.defineProperty(globalThis, "crypto", { value: originalGlobalCrypto, writable: true, configurable: true })
+			jest.dontMock("node:crypto")
+		}
 	})
 })

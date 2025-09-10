@@ -21,6 +21,35 @@ type Options = {
 
 export class TOTP {
 	/**
+	 * An internal, swappable function for performing HMAC signing.
+	 * This allows replacement of the crypto implementation.
+	 * @internal
+	 * @param {ArrayBuffer} keyBuffer - The secret key.
+	 * @param {string} dataHex - The data to sign, as a hexadecimal string.
+	 * @param {TOTPAlgorithm} algorithm - The hashing algorithm to use.
+	 * @returns {Promise<ArrayBuffer>} A promise that resolves to the signature.
+	 */
+	private static _sign = async (keyBuffer: ArrayBuffer, dataHex: string, algorithm: TOTPAlgorithm): Promise<ArrayBuffer> => {
+		/* istanbul ignore next */
+		try {
+			// Prioritize global Web Crypto API (browsers, Deno, Cloudflare Workers, etc.)
+			// or Node.js's implementation. This is the fastest and most secure method.
+			const crypto = (globalThis.crypto || require("node:crypto").webcrypto).subtle
+			const hmacKey = await crypto.importKey("raw", keyBuffer, { name: "HMAC", hash: { name: algorithm } }, false, ["sign"])
+			const dataBuffer = TOTP.hex2buf(dataHex)
+			return await crypto.sign("HMAC", hmacKey, dataBuffer)
+		} catch (_error) {
+			// If native crypto fails (e.g., in a restricted edge environment or old browser),
+			// fall back to the JS implementation. This is a robust catch-all.
+			const { default: jsSHA } = await import("jssha")
+			const hmac = new jsSHA(algorithm, "ARRAYBUFFER")
+			hmac.setHMACKey(keyBuffer, "ARRAYBUFFER")
+			hmac.update(TOTP.hex2buf(dataHex))
+			return hmac.getHMAC("ARRAYBUFFER")
+		}
+	}
+
+	/**
 	 * Generates a Time-based One-Time Password (TOTP).
 	 * @async
 	 * @param {string} key - The secret key for TOTP.
@@ -42,8 +71,7 @@ export class TOTP {
 
 		const keyBuffer = _options.encoding === "hex" ? TOTP.base32ToBuffer(key) : TOTP.asciiToBuffer(key)
 
-		const hmacKey = await TOTP.crypto.importKey("raw", keyBuffer, { name: "HMAC", hash: { name: _options.algorithm } }, false, ["sign"])
-		const signature = await TOTP.crypto.sign("HMAC", hmacKey, TOTP.hex2buf(timeHex))
+		const signature = await TOTP._sign(keyBuffer, timeHex, _options.algorithm)
 
 		const signatureHex = TOTP.buf2hex(signature)
 		const offset = TOTP.hex2dec(signatureHex.slice(-1)) * 2
@@ -135,49 +163,12 @@ export class TOTP {
 	}
 
 	/**
-	 * The cryptographic interface used for HMAC operations.
-	 * Chooses the Web Crypto API if available, otherwise falls back to Node's crypto module.
-	 * @type {SubtleCrypto}
-	 */
-	/* istanbul ignore next */
-	private static readonly crypto: SubtleCrypto = (globalThis.crypto || require("node:crypto").webcrypto).subtle
-
-	/**
 	 * A precalculated mapping from base32 character codes to their corresponding index values for performance optimization.
 	 * This mapping is used in the base32ToBuffer method to convert base32 encoded strings to their binary representation.
 	 */
 	private static readonly base32: { [key: number]: number } = {
-		50: 26,
-		51: 27,
-		52: 28,
-		53: 29,
-		54: 30,
-		55: 31,
-		65: 0,
-		66: 1,
-		67: 2,
-		68: 3,
-		69: 4,
-		70: 5,
-		71: 6,
-		72: 7,
-		73: 8,
-		74: 9,
-		75: 10,
-		76: 11,
-		77: 12,
-		78: 13,
-		79: 14,
-		80: 15,
-		81: 16,
-		82: 17,
-		83: 18,
-		84: 19,
-		85: 20,
-		86: 21,
-		87: 22,
-		88: 23,
-		89: 24,
-		90: 25,
+		50: 26, 51: 27, 52: 28, 53: 29, 54: 30, 55: 31, 65: 0, 66: 1, 67: 2, 68: 3, 69: 4, 70: 5, 71: 6,
+		72: 7, 73: 8, 74: 9, 75: 10, 76: 11, 77: 12, 78: 13, 79: 14, 80: 15, 81: 16, 82: 17, 83: 18,
+		84: 19, 85: 20, 86: 21, 87: 22, 88: 23, 89: 24, 90: 25,
 	}
 }
