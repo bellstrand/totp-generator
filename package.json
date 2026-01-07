@@ -36,7 +36,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "git@github.com:bellstrand/totp-generator.git"
+    "url": "git+ssh://git@github.com/bellstrand/totp-generator.git"
   },
   "scripts": {
     "test": "jest --silent=false",
