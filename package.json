@@ -43,8 +43,8 @@
     "test:coverage": "jest --silent=false --coverage",
     "check": "biome check",
     "build": "rm -rf lib/* && yarn build:cjs && yarn build:esm && ./build-after.sh",
-    "build:cjs": "tsc -p tsconfig-cjs.json && terser --source-map -cmo lib/cjs/index.js lib/cjs/index.js",
-    "build:esm": "tsc -p tsconfig-esm.json && terser --source-map -cmo lib/esm/index.js lib/esm/index.js"
+    "build:cjs": "tsc -p tsconfig-cjs.json && terser lib/cjs/index.js -cmo lib/cjs/index.js --source-map \"content='lib/cjs/index.js.map',url='index.js.map'\"",
+    "build:esm": "tsc -p tsconfig-esm.json && terser lib/esm/index.js -cmo lib/esm/index.js --source-map \"content='lib/esm/index.js.map',url='index.js.map'\""
   },
   "devDependencies": {
     "@biomejs/biome": "^2.2.3",

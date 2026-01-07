@@ -1,9 +1,9 @@
 {
 	"extends": "./tsconfig.json",
 	"compilerOptions": {
-		"module": "esnext",
+		"module": "es2022",
 		"outDir": "lib/esm",
-		"target": "esnext"
+		"target": "es2022"
 	},
 	"exclude": ["node_modules", "lib", "src/**/*.spec.ts"]
 }

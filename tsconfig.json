@@ -2,9 +2,9 @@
 	"compilerOptions": {
 		"rootDir": "src",
 		"baseUrl": "src",
-		"target": "esnext",
+		"target": "es2022",
 		"moduleResolution": "node",
-		"module": "esnext",
+		"module": "es2022",
 		"inlineSourceMap": false,
 		"lib": ["es2020", "dom"],
 		"esModuleInterop": true,
