@@ -10,13 +10,13 @@ jobs:
         with:
           fetch-depth: 0
 
-      - uses: actions/setup-node@v4
+      - uses: oven-sh/setup-bun@v2
 
       - name: Install
-        run: yarn install
+        run: bun install
 
       - name: Build
-        run: yarn build
+        run: bun run build
 
       - name: Bump Version
         env:

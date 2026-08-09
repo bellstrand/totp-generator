@@ -2,39 +2,45 @@ name: Test
 on: pull_request
 
 jobs:
-  formating:
-    name: Formating
+  formatting:
+    name: Formatting
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v2
-      - uses: actions/setup-node@v2
+      - uses: actions/checkout@v4
+      - uses: oven-sh/setup-bun@v2
       - name: Install
-        run: yarn install
+        run: bun install
       - name: Biome
-        run: yarn check
-  test:
-    name: Test Node.JS
+        run: bun run check
+
+  bun-test:
+    name: Bun Test & Coverage
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: oven-sh/setup-bun@v2
+      - name: Install
+        run: bun install
+      - name: Test
+        run: bun run test:coverage
+
+  node-matrix:
+    name: Node.js Compatibility
     runs-on: ubuntu-latest
     strategy:
       matrix:
         node: [18, 20, 22, 24]
     steps:
-      - uses: actions/checkout@v2
-      - uses: actions/setup-node@v2
+      - uses: actions/checkout@v4
+      - uses: oven-sh/setup-bun@v2
+      - name: Install & Build
+        run: |
+          bun install
+          bun run build
+      - uses: actions/setup-node@v4
         with:
           node-version: ${{ matrix.node }}
-      - name: Install
-        run: yarn install
-      - name: Test
-        run: yarn test
-
-  coverage:
-    name: Coverage Report
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v2
-      - uses: actions/setup-node@v2
-      - name: Install
-        run: yarn install
-      - name: Test
-        run: yarn test --coverage
+      - name: Test Node CJS & ESM
+        run: |
+          node -e 'const { TOTP } = require("./lib/cjs"); TOTP.generate("JBSWY3DPEHPK3PXP").then(r => console.log("CJS OTP:", r.otp));'
+          node --input-type=module -e 'import { TOTP } from "./lib/esm/index.js"; TOTP.generate("JBSWY3DPEHPK3PXP").then(r => console.log("ESM OTP:", r.otp));'
