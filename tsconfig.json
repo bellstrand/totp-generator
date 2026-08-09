@@ -1,9 +1,8 @@
 {
 	"compilerOptions": {
 		"rootDir": "src",
-		"baseUrl": "src",
 		"target": "es2022",
-		"moduleResolution": "node",
+		"moduleResolution": "bundler",
 		"module": "es2022",
 		"inlineSourceMap": false,
 		"lib": ["es2020", "dom"],
@@ -13,7 +12,7 @@
 		"skipLibCheck": true,
 		"strict": true,
 		"traceResolution": false,
-		"types": ["node", "jest"],
+		"types": ["node", "bun"],
 		"outDir": "lib",
 		"declaration": true
 	},
